@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-#define DEFAULT_CONFIG_PATH "/home/maximilian/Git/dcu/config/config.txt"
+#define DEFAULT_CONFIG_PATH "../config/config.txt"
 
 #define CAN_SETUP "Setup_Can"
 #define IMPORT_DBC "Import_DBC"
