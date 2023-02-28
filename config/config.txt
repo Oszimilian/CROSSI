@@ -1,0 +1,22 @@
+Can_Amount: 2
+
+Setup_Can(0): vcan0
+Setup_Can(1): vcan1
+
+Import_DBC(0): /home/maximilian/Git/dcu/DBC/CAN7_UASA2209_Accu_2.dbc
+Import_DBC(1): /home/maximilian/Git/dcu/DBC/CAN4_Accu_1.dbc
+
+
+#Capture_Mode(0): Multi_Thread
+#Capture_Mode(1): Multi_Thread
+
+Capture_Mode(0): Single_Thread
+Capture_Mode(1): Single_Thread
+
+#Decode_Mode(0): Multi_Thread
+#Decode_Mode(1): Multi_Thread
+
+Decode_Mode(0): Single_Thread
+Decode_Mode(1): Single_Thread
+
+

@@ -1,0 +1,237 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <regex>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+
+#include <linux/can.h>
+#include <linux/can/raw.h>
+
+
+#include <fstream>
+#include <dbcppp/Network.h>
+
+
+#include "dcu.h"
+#include "capture.h"
+#include "list.h"
+#include "decode.h"
+#include "ring.h"
+
+
+
+dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv)
+{
+    handler_init_caputre_decode_ring();
+
+    handler_init_capture_instance();
+    handler_init_decode_instance();
+
+    handler_init_capure_callback();
+    handler_init_decode_callback();
+
+
+
+}
+
+
+dcu::DCU_Handler::~DCU_Handler()
+{
+    /*
+    for (auto const &i : receive_instance)
+    {
+        delete i.second;
+    }
+    */
+   
+    handler_close_capture_thread();
+    handler_close_decode_thread();
+}
+
+void dcu::DCU_Handler::handler_start_cros()
+{
+    handler_init_caputre_thread();
+    handler_init_decode_thread();
+
+    handler_join_caputre_thread();
+    handler_join_decode_thread();
+}
+
+
+
+void dcu::DCU_Handler::handler_init_capture_instance()
+{
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        this->capture_instance.insert(std::make_pair(i, new CAN(config_get_socketname(i), this, this->capture_decode_ring[i])));
+    }
+}
+
+void dcu::DCU_Handler::handler_init_decode_instance()
+{
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        this->decode_instance.insert(std::make_pair(i, new DBC_Decode(config_get_dbc_path(i), config_get_socketname(i), this->capture_decode_ring[i])));
+    }
+}
+
+void dcu::DCU_Handler::handler_init_capure_callback()
+{
+    for (int i = 0; i <  config_get_can_count(); i++)
+    {
+        if (config_get_capture_mode(i) == MULTI_THREAD_CAPTURE)
+        {
+            this->multithread_caputre_list.push_back(i);
+        } 
+        else if (config_get_capture_mode(i) == SIGNLE_THREAD_CAPTURE)
+        {
+            this->singlethread_caputre_list.push_back(i);
+        }
+    }
+
+    for (int i = 0; i < multithread_caputre_list.size(); i++)
+    {
+        if (config_get_capture_mode(i) == MULTI_THREAD_CAPTURE)
+        {
+            this->capture_callback.insert(std::make_pair(i, [this, i](dcu::DCU_Handler *handler) {
+
+                while(true)
+                {
+                    this->capture_instance[i]->start_singlethread_recieve();
+                }
+            }));
+        }
+    }
+
+    if (singlethread_caputre_list.size() > 0)
+    {
+        this->capture_callback.insert(std::make_pair(multithread_caputre_list.size(), [this](dcu::DCU_Handler *handler) {
+            while(true)
+            {
+                for (int i = 0; i <  this->singlethread_caputre_list.size(); i++)
+                {
+                    this->capture_instance[i]->start_singlethread_recieve();
+                }
+            }
+        }));
+    }
+}
+
+void dcu::DCU_Handler::handler_init_decode_callback()
+{
+    for (int i = 0; i <  config_get_can_count(); i++)
+    {
+        if (config_get_decode_mode(i) == MULTI_THREAD_CAPTURE)
+        {
+            this->multithread_decode_list.push_back(i);
+        } 
+        else if (config_get_decode_mode(i) == SIGNLE_THREAD_CAPTURE)
+        {
+            this->singlethread_decode_list.push_back(i);
+        }
+    }
+
+    for (int i = 0; i < multithread_decode_list.size(); i++)
+    {
+        if (config_get_decode_mode(i) == MULTI_THREAD_CAPTURE)
+        {
+            this->decode_callback.insert(std::make_pair(i, [this, i](dcu::DCU_Handler *handler) {
+
+                while (true)
+                {
+                    this->decode_instance[this->multithread_decode_list[i]]->dbc_decode_msg();
+                }
+            }));
+        }
+    }
+
+    if (singlethread_decode_list.size() > 0)
+    {
+        this->decode_callback.insert(std::make_pair(multithread_decode_list.size(), [this](dcu::DCU_Handler *handler) {
+  
+            while(true)
+            {
+
+                for (auto &i : this->singlethread_decode_list)
+                {
+                    this->decode_instance[i]->dbc_decode_msg();
+                }
+
+            }
+        }));
+
+    }
+}
+
+void dcu::DCU_Handler::handler_init_caputre_thread()
+{
+    for (int i = 0; i < capture_callback.size(); i++)
+    {
+        this->capture_thread.insert(std::make_pair(i, new std::thread(capture_callback.at(i), this)));
+        std::cout << "-> Capture Thread Started: " << i << std::endl;
+    }
+}
+
+void dcu::DCU_Handler::handler_init_decode_thread()
+{
+    for (int i = 0; i <  decode_callback.size(); i++)
+    {
+        this->decode_thread.insert(std::make_pair(i, new std::thread(decode_callback.at(i), this)));
+        std::cout << "-> Decode Thread Started: " << i << std::endl;
+    }
+}
+
+void dcu::DCU_Handler::handler_join_caputre_thread()
+{
+    for (auto &i : capture_thread)
+    {
+        i.second->join();
+    }
+}
+
+void dcu::DCU_Handler::handler_join_decode_thread()
+{
+    for (auto &i : decode_thread)
+    {
+        i.second->join();
+    }
+}
+
+void dcu::DCU_Handler::handler_close_capture_thread()
+{
+    for (auto &i : capture_thread)
+    {
+        delete i.second;
+    }
+}
+
+void dcu::DCU_Handler::handler_close_decode_thread()
+{
+    for (auto &i : decode_thread)
+    {
+        delete i.second;
+    }
+}
+
+void dcu::DCU_Handler::handler_init_caputre_decode_ring()
+{
+    std::cout << "\t SETUP RING:" << std::endl;
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        this->capture_decode_ring.push_back(new ring<struct can_frame>(30));
+        std::cout << "-> Caputre_Docode_Ring Started: " << i << std::endl;
+    }
+    std::cout << std::endl;
+}
