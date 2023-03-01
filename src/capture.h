@@ -59,6 +59,7 @@ namespace dcu
 
             ring<struct can_frame> *caputre_decode_ring;
 
+
             void can_open_socket();
             void can_init_io();
             void can_init_socket_address();
@@ -67,7 +68,7 @@ namespace dcu
             void can_print_socket_info();
 
         public:
-            CAN(std::string name, DCU_Handler *handler, ring<struct can_frame> *caputre_decode_ring);
+            CAN(std::string name, ring<struct can_frame> *caputre_decode_ring);
             ~CAN();
 
             void start_multithread_receive();

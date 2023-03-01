@@ -15,6 +15,9 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
+#include <condition_variable>
+#include <mutex>
+
 #include "capture.h"
 #include "dcu.h"
 
@@ -22,8 +25,8 @@
 
 
 
-dcu::CAN::CAN(std::string name, dcu::DCU_Handler *handler, ring<struct can_frame> *caputre_decode_ring) 
-            : can_socket_name(name), handler(handler), caputre_decode_ring(caputre_decode_ring)
+dcu::CAN::CAN(std::string name, ring<struct can_frame> *caputre_decode_ring) 
+            : can_socket_name(name), caputre_decode_ring(caputre_decode_ring)
 {
     
 

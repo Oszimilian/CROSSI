@@ -18,6 +18,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <condition_variable>
+
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
@@ -59,6 +61,9 @@ namespace dcu
             
             std::vector<ring<struct can_frame> *> capture_decode_ring;
 
+            std::vector<std::condition_variable*> cv;
+            std::vector<std::mutex*> emtx;
+
     
             void handler_init_capture_instance();
             void handler_init_decode_instance();
@@ -74,6 +79,8 @@ namespace dcu
 
             void handler_close_capture_thread();
             void handler_close_decode_thread();
+
+            void handler_init_lock_thread();
 
             void handler_init_caputre_decode_ring();
     

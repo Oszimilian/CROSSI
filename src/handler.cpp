@@ -23,6 +23,8 @@
 #include <fstream>
 #include <dbcppp/Network.h>
 
+#include <condition_variable>
+
 
 #include "dcu.h"
 #include "capture.h"
@@ -35,6 +37,8 @@
 dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv)
 {
     handler_init_caputre_decode_ring();
+
+    handler_init_lock_thread();
 
     handler_init_capture_instance();
     handler_init_decode_instance();
@@ -75,7 +79,7 @@ void dcu::DCU_Handler::handler_init_capture_instance()
 {
     for (int i = 0; i < config_get_can_count(); i++)
     {
-        this->capture_instance.insert(std::make_pair(i, new CAN(config_get_socketname(i), this, this->capture_decode_ring[i])));
+        this->capture_instance.insert(std::make_pair(i, new CAN(config_get_socketname(i), this->capture_decode_ring[i])));
     }
 }
 
@@ -89,7 +93,9 @@ void dcu::DCU_Handler::handler_init_decode_instance()
 
 void dcu::DCU_Handler::handler_init_capure_callback()
 {
-    for (int i = 0; i <  config_get_can_count(); i++)
+    int i = 0;
+
+    for (i = 0; i <  config_get_can_count(); i++)
     {
         if (config_get_capture_mode(i) == MULTI_THREAD_CAPTURE)
         {
@@ -101,7 +107,7 @@ void dcu::DCU_Handler::handler_init_capure_callback()
         }
     }
 
-    for (int i = 0; i < multithread_caputre_list.size(); i++)
+    for (i = 0; i < multithread_caputre_list.size(); i++)
     {
         if (config_get_capture_mode(i) == MULTI_THREAD_CAPTURE)
         {
@@ -110,6 +116,17 @@ void dcu::DCU_Handler::handler_init_capure_callback()
                 while(true)
                 {
                     this->capture_instance[i]->start_singlethread_recieve();
+
+                    if(this->capture_decode_ring.at(i)->get_size() != 0)
+                    {
+                        
+                        {
+                            std::lock_guard<std::mutex> lock(*(this->emtx.at(i)));
+                        }
+
+                        this->cv.at(i)->notify_one();
+                    } 
+
                 }
             }));
         }
@@ -117,13 +134,22 @@ void dcu::DCU_Handler::handler_init_capure_callback()
 
     if (singlethread_caputre_list.size() > 0)
     {
-        this->capture_callback.insert(std::make_pair(multithread_caputre_list.size(), [this](dcu::DCU_Handler *handler) {
+        this->capture_callback.insert(std::make_pair(multithread_caputre_list.size(), [this, i](dcu::DCU_Handler *handler) {
             while(true)
             {
                 for (int i = 0; i <  this->singlethread_caputre_list.size(); i++)
                 {
                     this->capture_instance[i]->start_singlethread_recieve();
                 }
+
+                if(this->capture_decode_ring.at(i)->get_size() != 0)
+                {
+                    {
+                        std::lock_guard<std::mutex> lock(*(this->emtx.at(i)));
+                    }
+
+                    this->cv.at(i)->notify_one();
+                } 
             }
         }));
     }
@@ -131,7 +157,9 @@ void dcu::DCU_Handler::handler_init_capure_callback()
 
 void dcu::DCU_Handler::handler_init_decode_callback()
 {
-    for (int i = 0; i <  config_get_can_count(); i++)
+    int i = 0;
+
+    for (i = 0; i <  config_get_can_count(); i++)
     {
         if (config_get_decode_mode(i) == MULTI_THREAD_CAPTURE)
         {
@@ -143,7 +171,7 @@ void dcu::DCU_Handler::handler_init_decode_callback()
         }
     }
 
-    for (int i = 0; i < multithread_decode_list.size(); i++)
+    for (i = 0; i < multithread_decode_list.size(); i++)
     {
         if (config_get_decode_mode(i) == MULTI_THREAD_CAPTURE)
         {
@@ -151,7 +179,12 @@ void dcu::DCU_Handler::handler_init_decode_callback()
 
                 while (true)
                 {
+                    std::unique_lock<std::mutex> lock(*(emtx.at(i)));
+
+                    cv.at(i)->wait(lock);
+
                     this->decode_instance[this->multithread_decode_list[i]]->dbc_decode_msg();
+                    
                 }
             }));
         }
@@ -159,10 +192,13 @@ void dcu::DCU_Handler::handler_init_decode_callback()
 
     if (singlethread_decode_list.size() > 0)
     {
-        this->decode_callback.insert(std::make_pair(multithread_decode_list.size(), [this](dcu::DCU_Handler *handler) {
+        this->decode_callback.insert(std::make_pair(multithread_decode_list.size(), [this, i](dcu::DCU_Handler *handler) {
   
             while(true)
             {
+                std::unique_lock<std::mutex> lock(*(emtx.at(i)));
+
+                cv.at(i)->wait(lock);
 
                 for (auto &i : this->singlethread_decode_list)
                 {
@@ -234,4 +270,13 @@ void dcu::DCU_Handler::handler_init_caputre_decode_ring()
         std::cout << "-> Caputre_Docode_Ring Started: " << i << std::endl;
     }
     std::cout << std::endl;
+}
+
+void dcu::DCU_Handler::handler_init_lock_thread()
+{
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        cv.push_back(new std::condition_variable);
+        emtx.push_back(new std::mutex);
+    }
 }

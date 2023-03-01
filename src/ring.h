@@ -70,6 +70,12 @@ class ring
             list_insert_head(this->reuse_list, node);
         }
 
+        int get_size()
+        {
+            //std::lock_guard<std::mutex> lock(this->mtx);
+            return this->usr_list->leangh;
+        }
+
     private:
         std::mutex mtx;
 
