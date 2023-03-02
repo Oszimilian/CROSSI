@@ -1,19 +1,28 @@
 # Setup Repository
 
 ```
-git submodule add https://github.com/xR3b0rn/dbcppp.git external/dbcppp
+git clone --recursive https://github.com/Oszimilian/CROSSI.git
 ```
 
 Wenn 'external/dbcppp/' schon als Submodule vorgemerkt ist bitte das machen:
 
 ```
 git rm -r --cacked external/dbcppp
-```
 
-```
 cd external/dbcppp/thrid-party
 
 git submodule update --init --recursive
+```
+
+Wenn der Clone-Vorgang funktioniert hat dann:
+```
+cd build/
+
+cmake -S ../src/ -B .
+
+make
+
+./CROSSI
 ```
 
 
