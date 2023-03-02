@@ -31,10 +31,11 @@
 #include "list.h"
 #include "decode.h"
 #include "ring.h"
+#include "msggen.h"
 
 
 
-dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv)
+dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv), Msggen(this)
 {
     handler_init_caputre_decode_ring();
 
@@ -53,12 +54,6 @@ dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv)
 
 dcu::DCU_Handler::~DCU_Handler()
 {
-    /*
-    for (auto const &i : receive_instance)
-    {
-        delete i.second;
-    }
-    */
    
     handler_close_capture_thread();
     handler_close_decode_thread();

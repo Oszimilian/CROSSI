@@ -10,13 +10,15 @@ add_executable(${PROJECT_NAME}      dcu.cpp
                                     list.cpp
                                     decode.cpp
                                     config.cpp
+                                    msggen.cpp
                                     
                                     dcu.h
                                     capture.h
                                     list.h
                                     decode.h
                                     ring.h
-                                    config.h)
+                                    config.h
+                                    msggen.cpp)
 
 add_subdirectory(external/dbcppp)
 

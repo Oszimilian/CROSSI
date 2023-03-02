@@ -32,6 +32,7 @@
 
 #include "list.h"
 #include "config.h"
+#include "msggen.h"
 
 namespace dcu
 {
@@ -39,7 +40,7 @@ namespace dcu
     class CAN;
     class DBC_Decode;
 
-    class DCU_Handler : public Config
+    class DCU_Handler : public Config, public Msggen
     {
         private:
 
