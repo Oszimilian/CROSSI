@@ -1,3 +1,6 @@
 [submodule "external/dbcppp"]
 	path = external/dbcppp
 	url = https://github.com/xR3b0rn/dbcppp.git
+[submodule "src/external/dbcppp"]
+	path = src/external/dbcppp
+	url = https://github.com/xR3b0rn/dbcppp.git

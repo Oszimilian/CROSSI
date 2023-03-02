@@ -3,8 +3,8 @@ Can_Amount: 2
 Setup_Can(0): vcan0
 Setup_Can(1): vcan1
 
-Import_DBC(0): /home/maximilian/Git/CROSSI/DBC/CAN7_UASA2209_Accu_2.dbc
-Import_DBC(1): /home/maximilian/Git/CROSSI/DBC/CAN4_Accu_1.dbc
+Import_DBC(0): /home/pi/Git/CROSSI/DBC/CAN7_UASA2209_Accu_2.dbc
+Import_DBC(1): /home/pi/Git/CROSSI/DBC/CAN4_Accu_1.dbc
 
 
 #Capture_Mode(0): Multi_Thread
