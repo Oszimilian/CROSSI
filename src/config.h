@@ -56,6 +56,7 @@ namespace dcu
 
             template<typename T>
             void handle_dcu_config_error(T input);
+
     };
 }
 
