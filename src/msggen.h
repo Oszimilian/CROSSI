@@ -7,6 +7,8 @@
 #include <iterator>
 #include <algorithm>
 
+#include "fileHasher.h"
+
 #define DEFAULT_DBC_CHANGE_PATH "../config/dbc_change.txt"
 #define DBC_HASH "dbc_hash:"
 
@@ -15,7 +17,7 @@ namespace dcu
 {
     class DCU_Handler;
 
-    class Msggen
+    class Msggen : public File_Hasher
     {
         public:
             Msggen(DCU_Handler *handler);

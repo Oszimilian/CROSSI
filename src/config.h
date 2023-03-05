@@ -32,7 +32,8 @@ namespace dcu
             std::string config_get_decode_mode(int socket);
             int config_get_can_count();
 
-            std::vector<std::string> config_get_socketnames();
+            std::vector<std::string> *config_get_socketnames();
+            std::vector<std::string> *config_get_pathnames();
 
         private:
 

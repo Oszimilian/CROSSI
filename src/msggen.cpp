@@ -6,20 +6,21 @@
 #include <sstream>
 #include <iostream>
 
-
+#include "fileHasher.h"
 #include "dcu.h"
 
-dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : handler(handler)
+dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : handler(handler), 
+    File_Hasher(handler->config_get_pathnames(), DEFAULT_DBC_CHANGE_PATH)
 {
-    get_dbc_hash_value();
+    //get_dbc_hash_value();
     
-    get_dbc_last_hash();
+    //get_dbc_last_hash();
 
-    compare_hash_value();
+    //compare_hash_value();
 
-    analyse_dbc_file(0);
+    //analyse_dbc_file(0);
 
-    print_info();
+    //print_info();
 
 }
 

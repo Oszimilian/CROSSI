@@ -164,16 +164,31 @@ std::string dcu::Config::config_get_decode_mode(int socket)
     return dcu_config_params[socket]->decode_mode;
 }
 
-std::vector<std::string> dcu::Config::config_get_socketnames()
+std::vector<std::string> *dcu::Config::config_get_socketnames()
 {
-    std::vector<std::string> ret;
-    for (int i = 0; i < dcu_config_params.size(); i++)
+    std::vector<std::string> *ret = new std::vector<std::string>();
+
+    for (int i = 0; i < config_get_can_count(); i++)
     {
-        ret.push_back(dcu_config_params[i]->socket_name);
+        ret->push_back(config_get_socketname(i));
     }
 
     return ret;
 }
+
+std::vector<std::string> *dcu::Config::config_get_pathnames()
+{
+    std::vector<std::string> *ret = new std::vector<std::string>();
+
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        ret->push_back(config_get_dbc_path(i));
+    }
+
+    return ret;
+}
+
+
 
 int dcu::Config::config_get_can_count()
 {
