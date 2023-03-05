@@ -28,6 +28,8 @@ dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string file)
     }
 
     print_hash("Hashes:", &file_hash);
+
+    delete files;
 }
 
 std::size_t dcu::File_Hasher::hash_file(std::string *path)
@@ -59,9 +61,13 @@ std::size_t dcu::File_Hasher::read_hash_from_file(std::string *conf_path, std::s
     std::istream_iterator<std::string> end;
 
     std::stringstream ss;
+    std::size_t ret = 0;
+    
 
     while(iter != end)
     {
+        
+
         if (*iter == *file_path)
         {
             iter++;
@@ -72,7 +78,10 @@ std::size_t dcu::File_Hasher::read_hash_from_file(std::string *conf_path, std::s
 
                 if (is_string_digit(&(*iter)))
                 {
-                    return static_cast<std::size_t>(std::atoi(iter->c_str()));
+                    ss << *iter;
+                    ss >> ret;
+                    ss.clear();
+                    return ret;
                 }
             }
         }
@@ -97,6 +106,7 @@ bool dcu::File_Hasher::is_string_digit(const std::string *str)
 
 bool dcu::File_Hasher::cmp_hash(std::size_t *hash_1, std::size_t *hash_2)
 {
+    std::cout << *hash_1 << " == " << *hash_2 << std::endl;
     return (*hash_1 == *hash_2) ? true : false;
 }
 
@@ -129,4 +139,9 @@ void dcu::File_Hasher::print_hash(std::string msg, std::vector<std::size_t> *has
     }
 
     std::cout << std::endl;
+}
+
+bool dcu::File_Hasher::changes_notified()
+{
+    return this->files_changed;
 }

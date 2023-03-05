@@ -12,7 +12,7 @@ namespace dcu
     {
         public:
             File_Hasher(std::vector<std::string> *files, std::string file);
-            std::vector<int> get_updated_file();
+            bool changes_notified();
 
         private:
             bool files_changed = false;
