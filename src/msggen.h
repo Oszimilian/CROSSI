@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <fstream>
+#include <map>
+#include <iterator>
+#include <algorithm>
 
 #define DEFAULT_DBC_CHANGE_PATH "../config/dbc_change.txt"
 #define DBC_HASH "dbc_hash:"
@@ -35,6 +38,10 @@ namespace dcu
             void compare_hash_value();
             void update_hash_value();
             void print_info();
+            void analyse_dbc_file(int n);
+            void get_dbc_can_message(std::istream_iterator<std::string> *iter, std::istream_iterator<std::string> *end, std::string filter_1, std::string filter_2);
+            void get_dbc_can_submessage(std::istream_iterator<std::string> *iter, std::istream_iterator<std::string> *end, std::string filter_1, std::string filter_2);
+            char* get_data_typ(std::string data);
     };
 }
 
