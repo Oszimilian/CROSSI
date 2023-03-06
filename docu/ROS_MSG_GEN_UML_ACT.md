@@ -14,10 +14,7 @@ graph TD;
     create_cpp_code --> print_instruction
     create_ros_msg --> create_cpp_code
     print_instruction --> exit
-
-    
-
-    
+    create_cpp_code --> *.cpp_*.h
 
 
 ```
