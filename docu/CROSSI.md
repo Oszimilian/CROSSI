@@ -8,18 +8,18 @@ Check_Hash -- no --> Rebuild_Code
 Handler --> Check_DBC
 Rebuild_Code --> Exit[Exit and rebuild catkin_ws]
 
-Handler -- start --> Capture_Thread
-Handler -- start --> Decode_Thread
-Handler -- start --> Publisher_Thread
 
 
-subgraph CROSSI_Handler
 
+
+
+subgraph HANDLER_CROSSI
     
 
     subgraph Capture_Thread
 
         CAN_Caputre
+
 
     end
 
@@ -47,8 +47,28 @@ subgraph CROSSI_Handler
 
     end
 
-    Handler
+    subgraph Capture_Thread
+        rank=1;
+    end
+
+
+    subgraph Decode_Thread
+        
+    end
+
+
+    subgraph Publisher_Thread
+        
+    end
 
 end
+
+    Handler
+
+    Handler -- start --> HANDLER_CROSSI
+
+
+
+
 
 ```
