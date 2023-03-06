@@ -7,11 +7,13 @@
 #include <iostream>
 
 #include "fileHasher.h"
+#include "msgBuilder.h"
 #include "dcu.h"
 
 dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : 
         handler(handler), 
-        File_Hasher(handler->config_get_pathnames(), DEFAULT_DBC_CHANGE_PATH)
+        File_Hasher(handler->config_get_pathnames(), DEFAULT_DBC_CHANGE_PATH),
+        Msg_Builder(handler->config_get_pathnames())
 {
     if (changes_notified()) std::cout << "Changes in .dbc-Files notified" << std::endl;
 

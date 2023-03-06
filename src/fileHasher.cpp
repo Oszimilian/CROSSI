@@ -9,7 +9,13 @@
 
 #include "fileHasher.h"
 
-dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string file)
+dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string file) :
+        files(files), change_file(file)
+{
+
+}
+
+bool dcu::File_Hasher::changes_notified()
 {
     std::size_t hash = 0;
     std::size_t last_hash = 0;
@@ -17,19 +23,21 @@ dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string file)
     for (auto i : *files)
     {
         hash = hash_file(&i);
-        last_hash = read_hash_from_file(&file, &i);
+        last_hash = read_hash_from_file(&change_file, &i);
         if (!cmp_hash(&hash, &last_hash)) files_changed = true;
         file_hash.push_back(hash);
     }
 
     if (files_changed)
     {
-        update_hash(&file, &file_hash, files);
+        update_hash(&change_file, &file_hash, files);
     }
 
     print_hash("Hashes:", &file_hash);
 
     delete files;
+
+    return this->files_changed;
 }
 
 std::size_t dcu::File_Hasher::hash_file(std::string *path)
@@ -106,7 +114,6 @@ bool dcu::File_Hasher::is_string_digit(const std::string *str)
 
 bool dcu::File_Hasher::cmp_hash(std::size_t *hash_1, std::size_t *hash_2)
 {
-    std::cout << *hash_1 << " == " << *hash_2 << std::endl;
     return (*hash_1 == *hash_2) ? true : false;
 }
 
@@ -141,7 +148,3 @@ void dcu::File_Hasher::print_hash(std::string msg, std::vector<std::size_t> *has
     std::cout << std::endl;
 }
 
-bool dcu::File_Hasher::changes_notified()
-{
-    return this->files_changed;
-}

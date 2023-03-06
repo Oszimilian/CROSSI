@@ -17,6 +17,8 @@ namespace dcu
         private:
             bool files_changed = false;
             std::vector<std::size_t> file_hash;
+            std::vector<std::string> *files;
+            std::string change_file;
 
             std::size_t hash_file(std::string *path);
             std::size_t read_hash_from_file(std::string *path, std::string *file_path);
