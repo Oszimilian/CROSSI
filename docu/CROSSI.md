@@ -42,23 +42,7 @@ subgraph HANDLER_CROSSI
     Msg_Ring_2 --> ROS_Publisher
 
     subgraph Publisher_Thread
-
         ROS_Publisher
-
-    end
-
-    subgraph Capture_Thread
-        rank=1;
-    end
-
-
-    subgraph Decode_Thread
-        
-    end
-
-
-    subgraph Publisher_Thread
-        
     end
 
 end
