@@ -6,12 +6,14 @@
 #include <map>
 #include <vector>
 
-#define DEFAULT_CONFIG_PATH "../config/config.txt"
+#define DEFAULT_CONFIG_PATH "../config/crossi_config.txt"
 
+#define CAN_AMOUNT "Can_Amount"
 #define CAN_SETUP "Setup_Can"
 #define IMPORT_DBC "Import_DBC"
 #define CAPTURE_MODE "Capture_Mode"
 #define DECODE_MODE "Decode_Mode"
+#define ROS_MSG_DIR "Ros_Msg_Dir"
 
 namespace dcu
 {
@@ -43,6 +45,7 @@ namespace dcu
                 std::string dbc_path;
                 std::string capture_mode;
                 std::string decode_mode;
+                std::string ros_msg_dir;
             };
 
             std::map<int, struct Channel_Config*> dcu_config_params;
@@ -54,6 +57,12 @@ namespace dcu
             bool open_dcu_config_file();
             void close_dcu_config_file();
             bool analyse_dcu_config_file();
+            bool analyse_crossi_config_file();
+
+            bool is_string_digit(const std::string *str);
+            int get_channel(const std::string *str);
+            void handle_load_error(int *n,std::string str);
+            void handle_load_error(const std::string *c, std::string str);
 
             template<typename T>
             void handle_dcu_config_error(T input);

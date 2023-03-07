@@ -51,9 +51,9 @@ BO_ 4 BMaS_Commands: 8 MABX
 
 BO_ 3 Cell_Temp_Info: 8 BMaS
  SG_ Min_T_Cell_ID : 40|8@1+ (1,0) [0|0] ""  MABX
- SG_ Min_Cell_Temp : 24|16@1- (1,0) [0|0] "°C"  MABX
+ SG_ Min_Cell_Temp : 24|16@1- (1,0) [0|0] "ï¿½C"  MABX
  SG_ Max_T_Cell_ID : 16|8@1+ (1,0) [0|0] ""  MABX
- SG_ Max_Cell_Temp : 0|16@1- (1,0) [0|0] "°C"  MABX
+ SG_ Max_Cell_Temp : 0|16@1- (1,0) [0|0] "ï¿½C"  MABX
 
 BO_ 2 Cell_Voltage_Info: 8 BMaS
  SG_ Min_V_Cell_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX

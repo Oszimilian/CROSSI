@@ -3,16 +3,15 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <iterator>
 
 #include "config.h"
 
 dcu::Config::Config(int argc, char **argv)
 {
-    handle_dcu_config_error(check_dcu_config_file(argc, argv));
+    check_dcu_config_file(argc, argv);
 
-    handle_dcu_config_error(open_dcu_config_file());
-
-    analyse_dcu_config_file();
+    analyse_crossi_config_file();
 
 }
 
@@ -30,96 +29,72 @@ bool dcu::Config::check_dcu_config_file(int argc, char **argv)
         this->dcu_config_file_path.assign(DEFAULT_CONFIG_PATH);
     }
 
-
-    std::ifstream file(this->dcu_config_file_path);
-
-
-    return file.good();
+    return true;
 }
 
-template<typename T>
-void dcu::Config::handle_dcu_config_error(T input)
+bool dcu::Config::analyse_crossi_config_file()
 {
-    if (!input)
+    std::ifstream file(this->dcu_config_file_path);
+    if (!file.is_open())
     {
-        std::cerr << "Error: In DCU_Config! " << std::endl;
+        std::cerr << "Error: CROSSI config File could not open" << std::endl;
         exit(-1);
     }
-}
 
-bool dcu::Config::open_dcu_config_file()
-{
-    this->dcu_config_file = new std::ifstream(this->dcu_config_file_path);
+    std::string line;
+    std::istringstream iss;
+    std::istream_iterator<std::string> iter(iss);
+    std::istream_iterator<std::string> end;
 
-    return this->dcu_config_file->is_open();
-}
+    int can_channel = 0;
 
-void dcu::Config::close_dcu_config_file()
-{
-    this->dcu_config_file->close();
-}
-
-bool dcu::Config::analyse_dcu_config_file()
-{
-    int can_amount;
-    std::string instruktion;
-    std::string identifier;
-    int can_id;
-    std::string value;
-
-    int identifier_lengh;
-    int id_start;
-    int value_start;
-    int instruktion_leangh;
-
-    std::stringstream ss;
-
-
-    std::getline(*this->dcu_config_file, instruktion);
-    ss << instruktion.substr((instruktion.find(":") + 1), (instruktion.size() - (instruktion.find(":") + 1)));
-    ss >> can_amount;
-    this->can_amount = can_amount;
-    for (int i = 0; i < can_amount; i++)
+    while(std::getline(file, line))
     {
-        dcu_config_params.insert(std::make_pair(i, new Channel_Config));
-    }
-    
-    ss.clear();
-    
-    while(std::getline(*this->dcu_config_file, instruktion))
-    {
-        if (instruktion.size() == 0) continue;
-        if (instruktion.find("#") == 0) continue;
+        iss.clear();
+        iss.str(line);
+        iter = std::istream_iterator<std::string>(iss);
 
-        identifier_lengh = instruktion.find("(");
-        identifier = instruktion.substr(0, identifier_lengh);
+        if (*iter == "#") continue;
 
-
-        id_start = instruktion.find(")");
-        ss << instruktion.substr( (identifier_lengh + 1), (id_start - (identifier_lengh + 1)));
-        ss >> can_id;
-        ss.clear();
-
-        value_start = instruktion.find(":");
-        instruktion_leangh = instruktion.size();
-        value = instruktion.substr((value_start + 2), (instruktion_leangh - (value_start + 1)) );
-
-        if (identifier == CAN_SETUP)
-        { 
-            dcu_config_params[can_id]->socket_name = value;
-        }
-        else if (identifier == IMPORT_DBC)
+        if (*iter == CAN_AMOUNT)
         {
-            dcu_config_params[can_id]->dbc_path = value;
+            iter++;
+            can_channel = get_channel(&(*iter));
+            handle_load_error(&can_channel, CAN_AMOUNT);
+            for (int i = 0; i < can_channel; i++)
+                dcu_config_params.insert(std::make_pair(i, new Channel_Config));
+            this->can_amount = can_channel;
         }
-        else if (identifier == CAPTURE_MODE)
+
+        if (*iter == CAN_SETUP ||
+            *iter == IMPORT_DBC || 
+            *iter == CAPTURE_MODE ||
+            *iter == DECODE_MODE ||
+            *iter == ROS_MSG_DIR)
         {
-            dcu_config_params[can_id]->capture_mode = value;
+            const std::string instruction = *iter;
+
+            iter++;
+            can_channel = get_channel(&(*iter));
+            handle_load_error(&can_channel, IMPORT_DBC);
+            iter++;
+            handle_load_error(&(*iter), IMPORT_DBC);
+            iter++;
+
+            if (instruction == CAN_SETUP)
+                dcu_config_params[can_channel]->socket_name = *iter;
+            else if (instruction == IMPORT_DBC)
+                dcu_config_params[can_channel]->dbc_path = *iter;
+            else if (instruction == CAPTURE_MODE)
+                dcu_config_params[can_channel]->capture_mode = *iter;
+            else if (instruction == DECODE_MODE)
+                dcu_config_params[can_channel]->decode_mode = *iter;
+            else if (instruction == ROS_MSG_DIR)
+                dcu_config_params[can_channel]->ros_msg_dir = *iter;
+            else 
+                std::cout << "FAIL " << instruction << std::endl;
         }
-        else if (identifier == DECODE_MODE)
-        {
-            dcu_config_params[can_id]->decode_mode = value;
-        }
+
 
     }
 
@@ -128,8 +103,50 @@ bool dcu::Config::analyse_dcu_config_file()
         config_print(i);
     }
 
+    file.close();
 
     return true;
+}
+
+int dcu::Config::get_channel(const std::string *str)
+{
+    if (!is_string_digit(str)) return -1;
+
+    int channel;
+    std::stringstream ss;
+    ss.clear();
+    ss << *str;
+    ss >> channel;
+
+    return channel;
+}
+
+bool dcu::Config::is_string_digit(const std::string *str)
+{
+    if (str->empty()) return false;
+    for (auto &i : *str)
+    {
+        if (!isdigit(i)) return false;
+    }
+    return true;
+}
+
+void dcu::Config::handle_load_error(int *n, std::string str)
+{
+    if (*n == -1)
+    {
+        std::cerr << "Error: Failed to load " << str << std::endl;
+        exit(-1);
+    }
+}
+
+void dcu::Config::handle_load_error(const std::string *c, std::string str)
+{
+    if (*c != "=")
+    {
+        std::cerr << "Error: Failed to load " << str << std::endl;
+        exit(-1);
+    }
 }
 
 void dcu::Config::config_print(int n)
@@ -139,6 +156,7 @@ void dcu::Config::config_print(int n)
     std::cout << "DBC_File_Path: \t" << dcu_config_params[n]->dbc_path << std::endl;
     std::cout << "Capture_Mode: \t" << dcu_config_params[n]->capture_mode << std::endl;
     std::cout << "Decode_Mode: \t" << dcu_config_params[n]->decode_mode << std::endl;
+    std::cout << "Ros_Msg_Dir: \t" << dcu_config_params[n]->ros_msg_dir << std::endl;
     std::cout << std::endl;
 }
 

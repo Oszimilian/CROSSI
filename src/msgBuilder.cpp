@@ -66,3 +66,13 @@ void dcu::Msg_Builder::analyse_file_with_filter(std::string *file_path, std::str
 
     file.close();
 }
+
+int dcu::Msg_Builder::get_datatyp(std::string *str)
+{
+    std::string datatyp = str->substr( (str->find("|") + 1), (str->find("@") - str->find("|") - 1));
+
+    if (datatyp == "1") return ros_bool;
+    else if (datatyp == "8") return ros_uint8_t;
+    else if (datatyp == "16") return ros_uint16_t;
+    else return -1;
+}
