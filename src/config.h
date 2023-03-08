@@ -15,6 +15,7 @@
 #define DECODE_MODE "Decode_Mode"
 #define ROS_MSG_DIR "Ros_Msg_Dir"
 #define DBC_MSG_IGN "DBC_Msg_Ignore"
+#define FORCE_MSG_GEN "Force_Msg_Gen"
 
 namespace dcu
 {
@@ -33,6 +34,7 @@ namespace dcu
             std::string config_get_dbc_path(int socket);
             std::string config_get_capture_mode(int socket);
             std::string config_get_decode_mode(int socket);
+        
 
             int config_get_can_count();
 
@@ -42,6 +44,7 @@ namespace dcu
             bool config_validate_dbc_msg(int socket, const std::string *dbc_msg);
 
             int config_get_socket_from_path(std::string dbc_path_local);
+            bool config_get_ros_msg_force();
 
         private:
 
@@ -60,6 +63,7 @@ namespace dcu
             std::ifstream *dcu_config_file;
             std::string dcu_config_file_path;
             int can_amount;
+            bool ros_msg_force = false;
 
             bool check_dcu_config_file(int argc, char **argv);
             bool open_dcu_config_file();

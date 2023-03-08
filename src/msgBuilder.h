@@ -15,6 +15,7 @@ namespace dcu
     {
         public:
             Msg_Builder(std::vector<std::string> *file_paths, DCU_Handler *handler);
+            void start_creating_ros_msg();
 
         private:
             std::vector<std::string> *file_paths;

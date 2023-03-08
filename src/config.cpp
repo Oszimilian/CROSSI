@@ -66,7 +66,7 @@ bool dcu::Config::analyse_crossi_config_file()
             this->can_amount = can_channel;
         }
 
-        if (*iter == CAN_SETUP ||
+        else if (*iter == CAN_SETUP ||
             *iter == IMPORT_DBC || 
             *iter == CAPTURE_MODE ||
             *iter == DECODE_MODE ||
@@ -96,6 +96,16 @@ bool dcu::Config::analyse_crossi_config_file()
                 dcu_config_params[can_channel]->dbc_msg_ignore.insert(std::make_pair(*iter, *iter));
             else 
                 std::cout << "FAIL " << instruction << std::endl;
+        }
+
+        else if (*iter == FORCE_MSG_GEN)
+        {
+            iter++;
+            if (*iter == "=")
+            {
+                iter++;
+                this->ros_msg_force = ( (*iter == "ON") || (*iter == "On")) ? true : false;
+            }
         }
 
 
@@ -236,4 +246,9 @@ int dcu::Config::config_get_socket_from_path(std::string dbc_path_local)
     }
 
     return -1;
+}
+
+bool dcu::Config::config_get_ros_msg_force()
+{
+    return this->ros_msg_force;
 }

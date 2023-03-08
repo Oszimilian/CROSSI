@@ -15,6 +15,11 @@ dcu::Msg_Builder::Msg_Builder(std::vector<std::string> *file_paths, dcu::DCU_Han
     file_paths(file_paths),
     handler(handler)
 {
+
+}
+
+void dcu::Msg_Builder::start_creating_ros_msg()
+{
     init_ros_msg_folder();
 
     for (auto i : *this->file_paths)
