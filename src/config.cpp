@@ -70,7 +70,8 @@ bool dcu::Config::analyse_crossi_config_file()
             *iter == IMPORT_DBC || 
             *iter == CAPTURE_MODE ||
             *iter == DECODE_MODE ||
-            *iter == ROS_MSG_DIR)
+            *iter == ROS_MSG_DIR || 
+            *iter == DBC_MSG_IGN)
         {
             const std::string instruction = *iter;
 
@@ -91,6 +92,8 @@ bool dcu::Config::analyse_crossi_config_file()
                 dcu_config_params[can_channel]->decode_mode = *iter;
             else if (instruction == ROS_MSG_DIR)
                 dcu_config_params[can_channel]->ros_msg_dir = *iter;
+            else if (instruction == DBC_MSG_IGN)
+                dcu_config_params[can_channel]->dbc_msg_ignore.insert(std::make_pair(*iter, *iter));
             else 
                 std::cout << "FAIL " << instruction << std::endl;
         }
@@ -157,6 +160,11 @@ void dcu::Config::config_print(int n)
     std::cout << "Capture_Mode: \t" << dcu_config_params[n]->capture_mode << std::endl;
     std::cout << "Decode_Mode: \t" << dcu_config_params[n]->decode_mode << std::endl;
     std::cout << "Ros_Msg_Dir: \t" << dcu_config_params[n]->ros_msg_dir << std::endl;
+
+    for (auto &i : dcu_config_params[n]->dbc_msg_ignore)
+    {
+        std::cout << "DBC_MSG_IGNORE: \t" << i.second << std::endl;
+    }
     std::cout << std::endl;
 }
 
@@ -211,4 +219,21 @@ std::vector<std::string> *dcu::Config::config_get_pathnames()
 int dcu::Config::config_get_can_count()
 {
     return this->can_amount;
+}
+
+bool dcu::Config::config_validate_dbc_msg(int socket, const std::string *dbc_msg)
+{
+    auto it = this->dcu_config_params[socket]->dbc_msg_ignore.find(*dbc_msg);
+
+    return (it != this->dcu_config_params[socket]->dbc_msg_ignore.end()) ? true : false;
+}
+
+int dcu::Config::config_get_socket_from_path(std::string dbc_path_local)
+{
+    for (int i = 0; i < config_get_can_count(); i++)
+    {
+        if (this->dcu_config_params[i]->dbc_path == dbc_path_local) return i;
+    }
+
+    return -1;
 }

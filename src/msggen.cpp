@@ -13,7 +13,7 @@
 dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : 
         handler(handler), 
         File_Hasher(handler->config_get_pathnames(), DEFAULT_DBC_CHANGE_PATH),
-        Msg_Builder(handler->config_get_pathnames())
+        Msg_Builder(handler->config_get_pathnames(), handler)
 {
     if (changes_notified()) std::cout << "Changes in .dbc-Files notified" << std::endl;
 
