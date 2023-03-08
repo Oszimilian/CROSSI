@@ -134,7 +134,10 @@ void dcu::Msg_Builder::add_ros_msg_sig(std::ofstream *file, const std::string *d
 
 void dcu::Msg_Builder::init_ros_msg_folder()
 {
-    std::string cmd = "rm -rf ";
+    std::string cmd = "mkdir ../msg";
+    std::system(cmd.c_str());
+    cmd.clear();
+    cmd = "rm -rf ";
     cmd += ROS_MSG_PATH;
     cmd += "*.msg";
     std::system(cmd.c_str());
