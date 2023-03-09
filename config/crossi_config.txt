@@ -1,6 +1,6 @@
 Can_Amount 2
 
-Force_Msg_Gen = ON
+Force_Msg_Gen = OFF
 
 Setup_Can 0 = vcan0
 Setup_Can 1 = vcan1
