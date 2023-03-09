@@ -9,7 +9,7 @@
 
 #include "fileHasher.h"
 
-dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string file) :
+dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string *file) :
         files(files), change_file(file)
 {
 
@@ -23,14 +23,14 @@ bool dcu::File_Hasher::changes_notified()
     for (auto i : *files)
     {
         hash = hash_file(&i);
-        last_hash = read_hash_from_file(&change_file, &i);
+        last_hash = read_hash_from_file(change_file, &i);
         if (!cmp_hash(&hash, &last_hash)) files_changed = true;
         file_hash.push_back(hash);
     }
 
     if (files_changed)
     {
-        update_hash(&change_file, &file_hash, files);
+        update_hash(change_file, &file_hash, files);
     }
 
     print_hash("Hashes:", &file_hash);

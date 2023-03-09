@@ -98,16 +98,16 @@ void dcu::Msg_Builder::analyse_file_with_filter(std::string *file_path, std::str
 
 std::ofstream *dcu::Msg_Builder::create_new_ros_msg(const std::string *msg_name)
 {
-    std::filesystem::path p(ROS_MSG_PATH);
+    std::filesystem::path p(*handler->config_get_ros_msg_dir());
     if (!std::filesystem::exists(p))
     {
-        std::cerr << "Error: can not open directory: " << ROS_MSG_PATH << std::endl;
+        std::cerr << "Error: can not open directory: " << *handler->config_get_ros_msg_dir() << std::endl;
         exit(-1);
     }
 
     std::string new_msg_name = msg_name->substr(0, msg_name->size() - 1) + ".msg";
 
-    std::ofstream *file = new std::ofstream(ROS_MSG_PATH + new_msg_name, std::ios::out | std::ios::app);
+    std::ofstream *file = new std::ofstream(*handler->config_get_ros_msg_dir() + new_msg_name, std::ios::out | std::ios::app);
     if (!file->is_open())
     {
         std::cerr << "Error: can not create ros-msg-file: " << *msg_name << std::endl;
@@ -135,10 +135,10 @@ void dcu::Msg_Builder::add_ros_msg_sig(std::ofstream *file, const std::string *d
 void dcu::Msg_Builder::init_ros_msg_folder()
 {
     std::string cmd = "mkdir ../msg";
-    std::system(cmd.c_str());
+    //std::system(cmd.c_str());
     cmd.clear();
     cmd = "rm -rf ";
-    cmd += ROS_MSG_PATH;
+    cmd += *handler->config_get_ros_msg_dir();
     cmd += "*.msg";
     std::system(cmd.c_str());
 }

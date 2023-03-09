@@ -11,14 +11,14 @@ namespace dcu
     class File_Hasher
     {
         public:
-            File_Hasher(std::vector<std::string> *files, std::string file);
+            File_Hasher(std::vector<std::string> *files, std::string *file);
             bool changes_notified();
 
         private:
             bool files_changed = false;
             std::vector<std::size_t> file_hash;
             std::vector<std::string> *files;
-            std::string change_file;
+            std::string *change_file;
 
             std::size_t hash_file(std::string *path);
             std::size_t read_hash_from_file(std::string *path, std::string *file_path);

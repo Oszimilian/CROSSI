@@ -6,7 +6,13 @@
 #include <map>
 #include <vector>
 
-#define DEFAULT_CONFIG_PATH "../config/crossi_config.txt"
+
+#ifdef DEFAULT_CONFIG_PATH
+
+#else 
+    #define DEFAULT_CONFIG_PATH "../config/crossi_config.txt"
+#endif
+
 
 #define CAN_AMOUNT "Can_Amount"
 #define CAN_SETUP "Setup_Can"
@@ -16,6 +22,8 @@
 #define ROS_MSG_DIR "Ros_Msg_Dir"
 #define DBC_MSG_IGN "DBC_Msg_Ignore"
 #define FORCE_MSG_GEN "Force_Msg_Gen"
+#define HASH_DBC_PATH "Hash_DBC_Path"
+#define ROS_MSG_PATH "ROS_Msg_Path"
 
 namespace dcu
 {
@@ -46,6 +54,9 @@ namespace dcu
             int config_get_socket_from_path(std::string dbc_path_local);
             bool config_get_ros_msg_force();
 
+            std::string *config_get_hash_dbc_path();
+            std::string *config_get_ros_msg_dir();
+
         private:
 
             struct Channel_Config
@@ -64,6 +75,8 @@ namespace dcu
             std::string dcu_config_file_path;
             int can_amount;
             bool ros_msg_force = false;
+            std::string ros_msg_dir;
+            std::string hash_dbc_path;
 
             bool check_dcu_config_file(int argc, char **argv);
             bool open_dcu_config_file();

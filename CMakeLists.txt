@@ -24,6 +24,8 @@ add_executable(${PROJECT_NAME}      src/dcu.cpp
                                     src/fileHasher.h
                                     src/msgBuilder.h)
 
+add_definitions(-DEFAULT_CONFIG_PATH="/home/maximilian/Git/CROSSI/config/crossi_config.txt")
+
 add_subdirectory(src/external/dbcppp)
 
 target_link_libraries(${PROJECT_NAME} libdbcppp)

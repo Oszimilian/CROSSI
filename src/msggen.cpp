@@ -12,7 +12,7 @@
 
 dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : 
         handler(handler), 
-        File_Hasher(handler->config_get_pathnames(), DEFAULT_DBC_CHANGE_PATH),
+        File_Hasher(handler->config_get_pathnames(), handler->config_get_hash_dbc_path()),
         Msg_Builder(handler->config_get_pathnames(), handler)
 {
     if (changes_notified() || handler->config_get_ros_msg_force())

@@ -10,7 +10,7 @@
 #include "fileHasher.h"
 #include "msgBuilder.h"
 
-#define DEFAULT_DBC_CHANGE_PATH "../config/dbc_change.txt"
+
 #define DBC_HASH "dbc_hash:"
 
 

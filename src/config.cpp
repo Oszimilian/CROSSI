@@ -108,6 +108,26 @@ bool dcu::Config::analyse_crossi_config_file()
             }
         }
 
+        else if (*iter == HASH_DBC_PATH)
+        {
+            iter++;
+            if (*iter == "=")
+            {
+                iter++;
+                this->hash_dbc_path = *iter;
+            }
+        }
+
+        else if (*iter == ROS_MSG_PATH)
+        {
+            iter++;
+            if (*iter == "=")
+            {
+                iter++;
+                this->ros_msg_dir = *iter;
+            }
+        }
+
 
     }
 
@@ -252,3 +272,14 @@ bool dcu::Config::config_get_ros_msg_force()
 {
     return this->ros_msg_force;
 }
+
+std::string *dcu::Config::config_get_hash_dbc_path()
+{
+    return &this->hash_dbc_path;
+}
+
+std::string *dcu::Config::config_get_ros_msg_dir()
+{
+    return &this->ros_msg_dir;
+}
+

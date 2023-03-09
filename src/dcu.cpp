@@ -19,7 +19,7 @@
 
 int main(int argc, char **argv)
 {
-    std::cout << "\t CAN MODULE" << std::endl;
+    std::cout << "\t CROSSI" << std::endl;
     std::cout << std::endl;
 
 

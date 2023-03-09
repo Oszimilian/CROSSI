@@ -5,7 +5,7 @@
 #include <vector>
 #include <fstream>
 
-#define ROS_MSG_PATH "../msg/"
+
 
 namespace dcu
 {
