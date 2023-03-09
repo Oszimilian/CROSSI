@@ -1,0 +1,2 @@
+/home/maximilian/Git/CROSSI/DBC/CAN7_UASA2209_Accu_2.dbc = 3435484850029370832
+/home/maximilian/Git/CROSSI/DBC/CAN4_Accu_1.dbc = 6951724408895731722

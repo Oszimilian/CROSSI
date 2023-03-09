@@ -126,11 +126,3 @@ void dcu::CAN::start_singlethread_recieve()
     }
 }
 
-
- 
-
-
-
-
-
-

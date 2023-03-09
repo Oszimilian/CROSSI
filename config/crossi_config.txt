@@ -1,0 +1,22 @@
+Can_Amount 2
+
+Force_Msg_Gen = ON
+
+Setup_Can 0 = vcan0
+Setup_Can 1 = vcan1
+
+Import_DBC 0 = /home/maximilian/Git/CROSSI/DBC/CAN7_UASA2209_Accu_2.dbc
+Import_DBC 1 = /home/maximilian/Git/CROSSI/DBC/CAN4_Accu_1.dbc
+
+# Single_Thread Multi_Thread
+
+Capture_Mode 0 = Single_Thread
+Capture_Mode 1 = Single_Thread
+
+Decode_Mode 0 = Single_Thread
+Decode_Mode 1 = Single_Thread
+
+Ros_Msg_Dir 0 = /home/maximilian/Git/CROSSI/msg/CAN1
+Ros_Msg_Dir 1 = /home/maximilian/Git/CROSSI/msg/CAN2
+
+DBC_Msg_Ignore 1 = IVT_Msg_Cmd:
