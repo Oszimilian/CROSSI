@@ -113,7 +113,7 @@ std::ofstream *dcu::Msg_Builder::create_new_ros_msg(const std::string *msg_name)
     }
 
     //std::cout << new_msg_name << std::endl;
-    ros_msg.push_back(*config_get_ros_msg_dir() + new_msg_name);
+    ros_msg.push_back(new_msg_name);
 
     p.clear(); 
 

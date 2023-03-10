@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 
+#define DEFAULT_CONFIG_PATH "/home/maximilian-crossi/catkin_ws/src/crossi/config/crossi_config.txt"
 
 #ifdef DEFAULT_CONFIG_PATH
 
