@@ -1,5 +1,22 @@
 # Setup Repository
 
+## Introduction
+This is a library which is capable to read from several can-spi-interfaces on the rasberry pi, decode them in a readable form and publish them on several topics on ROS. 
+
+
+##### Install dbcppp
+```
+git clone --recurse-submodules https://github.com/xR3b0rn/dbcppp.git
+cd dbcppp
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j
+make RunTests
+make install
+ldconfig # on Unix-systems only
+```
+
 ##### Clone the Repository in ROS
 
 ``` 
