@@ -5,13 +5,16 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "config.h"
 
 namespace dcu
 {
-    class File_Hasher
+
+
+    class File_Hasher : virtual public Config
     {
         public:
-            File_Hasher(std::vector<std::string> *files, std::string *file);
+            File_Hasher();
             bool changes_notified();
 
         private:

@@ -15,7 +15,7 @@
 #include <linux/can/raw.h>
 
 #include "ring.h"
-
+#include "config.h"
 
 
 

@@ -5,21 +5,25 @@
 #include <vector>
 #include <fstream>
 
-
+#include "config.h"
 
 namespace dcu
 {
-    class DCU_Handler;
+ 
 
-    class Msg_Builder
+    class Msg_Builder : virtual public Config
     {
         public:
-            Msg_Builder(std::vector<std::string> *file_paths, DCU_Handler *handler);
+            Msg_Builder();
+
+        
             void start_creating_ros_msg();
+            std::vector<std::string> *builder_get_ros_msg_vec();
 
         private:
             std::vector<std::string> *file_paths;
-            DCU_Handler *handler;
+
+            std::vector<std::string> ros_msg;
 
             enum ROS_MSG_TYP {
                 ros_bool,

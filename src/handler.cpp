@@ -32,11 +32,17 @@
 #include "decode.h"
 #include "ring.h"
 #include "msggen.h"
+#include "config.h"
 
 
 
-dcu::DCU_Handler::DCU_Handler(int argc, char **argv) :  Config(argc, argv), Msggen(this)
+dcu::DCU_Handler::DCU_Handler(int argc, char **argv)
 {
+
+    config_print_settings();
+
+    start_message_generation();
+
     handler_init_caputre_decode_ring();
 
     handler_init_lock_thread();

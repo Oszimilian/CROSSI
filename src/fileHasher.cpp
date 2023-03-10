@@ -8,11 +8,12 @@
 #include <iterator>
 
 #include "fileHasher.h"
+#include "config.h"
 
-dcu::File_Hasher::File_Hasher(std::vector<std::string> *files, std::string *file) :
-        files(files), change_file(file)
+dcu::File_Hasher::File_Hasher() : Config()
 {
-
+    files = config_get_pathnames();
+    change_file = config_get_hash_dbc_path();
 }
 
 bool dcu::File_Hasher::changes_notified()
@@ -143,6 +144,10 @@ void dcu::File_Hasher::print_hash(std::string msg, std::vector<std::size_t> *has
     for (auto &i : this->file_hash)
     {
         std::cout << "-> " << msg << " " << i << std::endl;
+    }
+    if (files_changed)
+    {
+        std::cout << "-> " << "Changes in .dbc-Files notified" << std::endl;
     }
 
     std::cout << std::endl;

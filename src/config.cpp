@@ -7,9 +7,9 @@
 
 #include "config.h"
 
-dcu::Config::Config(int argc, char **argv)
+dcu::Config::Config()
 {
-    check_dcu_config_file(argc, argv);
+    this->dcu_config_file_path = DEFAULT_CONFIG_PATH;
 
     analyse_crossi_config_file();
 
@@ -66,12 +66,12 @@ bool dcu::Config::analyse_crossi_config_file()
             this->can_amount = can_channel;
         }
 
-        else if (*iter == CAN_SETUP ||
-            *iter == IMPORT_DBC || 
-            *iter == CAPTURE_MODE ||
-            *iter == DECODE_MODE ||
-            *iter == ROS_MSG_DIR || 
-            *iter == DBC_MSG_IGN)
+        else if (   *iter == CAN_SETUP ||
+                    *iter == IMPORT_DBC || 
+                    *iter == CAPTURE_MODE ||
+                    *iter == DECODE_MODE ||
+                    *iter == ROS_MSG_DIR || 
+                    *iter == DBC_MSG_IGN)
         {
             const std::string instruction = *iter;
 
@@ -95,50 +95,66 @@ bool dcu::Config::analyse_crossi_config_file()
             else if (instruction == DBC_MSG_IGN)
                 dcu_config_params[can_channel]->dbc_msg_ignore.insert(std::make_pair(*iter, *iter));
             else 
-                std::cout << "FAIL " << instruction << std::endl;
+            {
+                std::cout << "ERROR: Analysing the crossi_config.txt failed: " << instruction << std::endl;
+                exit(-1);
+            }
+                
         }
 
-        else if (*iter == FORCE_MSG_GEN)
+        
+        else if (   *iter == FORCE_MSG_GEN || 
+                    *iter == HASH_DBC_PATH ||
+                    *iter == ROS_MSG_PATH ||
+                    *iter == CMAKE_FILE
+                    )
         {
+            const std::string instruction = *iter;
+
             iter++;
             if (*iter == "=")
             {
                 iter++;
-                this->ros_msg_force = ( (*iter == "ON") || (*iter == "On")) ? true : false;
+                
+                if (instruction == FORCE_MSG_GEN)
+                    this->ros_msg_force = ( (*iter == "ON") || (*iter == "On")) ? true : false;
+                else if (instruction == HASH_DBC_PATH)
+                    this->hash_dbc_path = *iter;
+                else if (instruction == ROS_MSG_PATH)
+                    this->ros_msg_dir = *iter;
+                else if (instruction == CMAKE_FILE)
+                    this->cmake_file_path = *iter;
+                else 
+                {
+                    std::cout << "ERROR: Analysing the crossi_cofnig.txt Failed: " << instruction << std::endl;
+                    exit(-1);
+                }  
+            } else {
+                    std::cout << "ERROR: Analysing the crossi_cofnig.txt Failed: " << instruction << std::endl;
+                    exit(-1);
             }
         }
+    
 
-        else if (*iter == HASH_DBC_PATH)
-        {
-            iter++;
-            if (*iter == "=")
-            {
-                iter++;
-                this->hash_dbc_path = *iter;
-            }
-        }
-
-        else if (*iter == ROS_MSG_PATH)
-        {
-            iter++;
-            if (*iter == "=")
-            {
-                iter++;
-                this->ros_msg_dir = *iter;
-            }
-        }
-
-
-    }
-
-    for (int i = 0; i < this->can_amount; i++)
-    {
-        config_print(i);
     }
 
     file.close();
 
     return true;
+}
+
+void dcu::Config::config_print_settings()
+{
+    for (int i = 0; i < this->can_amount; i++)
+    {
+        config_print(i);
+    }
+
+    std::cout << "\t CONFIG:" << std::endl;
+    std::cout << "Hash_DBC_Path: \t" << this->ros_msg_dir << std::endl;
+    std::cout << "ROS_Msg_Path: \t" << this->hash_dbc_path << std::endl;
+    std::cout << "CMake_File: \t" << this->cmake_file_path << std::endl;
+    std::cout << std::endl;
 }
 
 int dcu::Config::get_channel(const std::string *str)
@@ -283,3 +299,7 @@ std::string *dcu::Config::config_get_ros_msg_dir()
     return &this->ros_msg_dir;
 }
 
+std::string *dcu::Config::config_get_cmake_path()
+{
+    return &this->cmake_file_path;
+}

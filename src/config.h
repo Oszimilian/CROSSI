@@ -24,38 +24,33 @@
 #define FORCE_MSG_GEN "Force_Msg_Gen"
 #define HASH_DBC_PATH "Hash_DBC_Path"
 #define ROS_MSG_PATH "ROS_Msg_Path"
+#define CMAKE_FILE "CMake_File"
 
 namespace dcu
 {
     class Config
     {
         public:
-            Config(int argc, char **argv);
+            Config();
             ~Config();
 
-
-
+        public:
+            void config_print_settings();
             const struct Channel_Config *get_config(int channel);
             void config_print(int n);
-
             std::string config_get_socketname(int socket);
             std::string config_get_dbc_path(int socket);
             std::string config_get_capture_mode(int socket);
             std::string config_get_decode_mode(int socket);
-        
-
             int config_get_can_count();
-
             std::vector<std::string> *config_get_socketnames();
             std::vector<std::string> *config_get_pathnames();
-
             bool config_validate_dbc_msg(int socket, const std::string *dbc_msg);
-
             int config_get_socket_from_path(std::string dbc_path_local);
             bool config_get_ros_msg_force();
-
             std::string *config_get_hash_dbc_path();
             std::string *config_get_ros_msg_dir();
+            std::string *config_get_cmake_path();
 
         private:
 
@@ -66,6 +61,7 @@ namespace dcu
                 std::string capture_mode;
                 std::string decode_mode;
                 std::string ros_msg_dir;
+                
 
                 std::map<std::string, std::string> dbc_msg_ignore;
             };
@@ -77,6 +73,7 @@ namespace dcu
             bool ros_msg_force = false;
             std::string ros_msg_dir;
             std::string hash_dbc_path;
+            std::string cmake_file_path;
 
             bool check_dcu_config_file(int argc, char **argv);
             bool open_dcu_config_file();

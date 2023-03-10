@@ -8,20 +8,23 @@
 
 #include "fileHasher.h"
 #include "msgBuilder.h"
+#include "config.h"
 #include "dcu.h"
+#include "loadROSMsg.h"
+#include "msggen.h"
 
-dcu::Msggen::Msggen(dcu::DCU_Handler *handler) : 
-        handler(handler), 
-        File_Hasher(handler->config_get_pathnames(), handler->config_get_hash_dbc_path()),
-        Msg_Builder(handler->config_get_pathnames(), handler)
+dcu::Msggen::Msggen()
 {
-    if (changes_notified() || handler->config_get_ros_msg_force())
-    {
-        std::cout << "Changes in .dbc-Files notified" << std::endl;
-        start_creating_ros_msg();
-    } 
-
+    
 }
 
+void dcu::Msggen::start_message_generation()
+{
+    if (changes_notified() || config_get_ros_msg_force())
+    {
+        start_creating_ros_msg();
+        update_ros_msg_files_in_cmake(builder_get_ros_msg_vec());
+    } 
+}
 
 

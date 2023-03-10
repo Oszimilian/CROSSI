@@ -5,7 +5,7 @@
 ``` 
 cd catkin_ws/src/
 
-catkin_create_pkg crossi roscpp message_generation
+catkin_create_pkg crossi roscpp message_generation message_runtime
 
 cd crossi/
 

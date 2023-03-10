@@ -40,7 +40,7 @@ namespace dcu
     class CAN;
     class DBC_Decode;
 
-    class DCU_Handler : public Config, public Msggen
+    class DCU_Handler :  public Msggen, virtual public Config
     {
         private:
 
