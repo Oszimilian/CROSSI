@@ -66,26 +66,22 @@ void dcu::Msg_Builder::analyse_file_with_filter(std::string *file_path, std::str
                 skip_dbc_msg = (config_validate_dbc_msg(socket, &(*iter))) ? true : false;
                 if (skip_dbc_msg) break;
                 file_ptr = (count == 2) ? create_new_ros_msg(&(*iter)) : file_ptr;
-                //std::cout << *iter << " ";
                 iter++;
                 skip_dbc_msg = false;
                 count++;
             } while ( (*iter != filter_2) && (iter != end));
             count = 0;
-            //std::cout << std::endl;
         }
 
         if (*iter == filter_2 && !skip_dbc_msg && file_ptr != nullptr)   
         {
-            //std::cout << "\t";
             do
             {
                 if (count == 1) add_ros_msg_sig(file_ptr, &data_typ, &(*iter));
-                //std::cout << *iter << " ";
                 iter++;
                 count++;
             } while( (*iter != filter_1) && (*iter != filter_2) && (iter != end));
-            //std::cout << std::endl;
+
             count = 0;
         }
         
@@ -125,6 +121,7 @@ void dcu::Msg_Builder::close_new_ros_msg(std::ofstream *file)
     if (file == nullptr) return;
     file->close();
     delete file;
+    this->ros_msg_count++;
 }
 
 void dcu::Msg_Builder::add_ros_msg_sig(std::ofstream *file, const std::string *data_typ, const std::string *var_name)
@@ -136,7 +133,6 @@ void dcu::Msg_Builder::add_ros_msg_sig(std::ofstream *file, const std::string *d
 void dcu::Msg_Builder::init_ros_msg_folder()
 {
     std::string cmd = "mkdir ../msg";
-    //std::system(cmd.c_str());
     cmd.clear();
     cmd = "rm -rf ";
     cmd += *config_get_ros_msg_dir();
@@ -148,4 +144,12 @@ void dcu::Msg_Builder::init_ros_msg_folder()
 std::vector<std::string> *dcu::Msg_Builder::builder_get_ros_msg_vec()
 {
     return &this->ros_msg;
+}
+
+void dcu::Msg_Builder::print_info()
+{
+    std::cout << "\t CREATE ROS MSG" << std::endl;
+    std::cout << "ROS_MSG_AMOUNT: " << this->ros_msg_count << std::endl;
+    std::cout << "ROS_MSG_DIR: " << *config_get_ros_msg_dir() << std::endl;
+    std::cout << std::endl;
 }

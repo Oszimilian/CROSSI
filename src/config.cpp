@@ -71,7 +71,7 @@ bool dcu::Config::analyse_crossi_config_file()
                     *iter == CAPTURE_MODE ||
                     *iter == DECODE_MODE ||
                     *iter == ROS_MSG_DIR || 
-                    *iter == DBC_MSG_IGN)
+                    *iter == DBC_MSG_IGN )
         {
             const std::string instruction = *iter;
 
@@ -106,7 +106,8 @@ bool dcu::Config::analyse_crossi_config_file()
         else if (   *iter == FORCE_MSG_GEN || 
                     *iter == HASH_DBC_PATH ||
                     *iter == ROS_MSG_PATH ||
-                    *iter == CMAKE_FILE
+                    *iter == CMAKE_FILE ||
+                    *iter == ROS_MSG_HEADER 
                     )
         {
             const std::string instruction = *iter;
@@ -124,6 +125,8 @@ bool dcu::Config::analyse_crossi_config_file()
                     this->ros_msg_dir = *iter;
                 else if (instruction == CMAKE_FILE)
                     this->cmake_file_path = *iter;
+                else if (instruction == ROS_MSG_HEADER)
+                    this->ros_msg_headerfile_path = *iter;
                 else 
                 {
                     std::cout << "ERROR: Analysing the crossi_cofnig.txt Failed: " << instruction << std::endl;
@@ -302,4 +305,9 @@ std::string *dcu::Config::config_get_ros_msg_dir()
 std::string *dcu::Config::config_get_cmake_path()
 {
     return &this->cmake_file_path;
+}
+
+std::string *dcu::Config::config_get_rosmsg_header_path()
+{
+    return &this->ros_msg_headerfile_path;
 }

@@ -19,11 +19,13 @@ namespace dcu
         
             void start_creating_ros_msg();
             std::vector<std::string> *builder_get_ros_msg_vec();
+            void print_info();
 
         private:
             std::vector<std::string> *file_paths;
 
             std::vector<std::string> ros_msg;
+            std::size_t ros_msg_count = 1;
 
             enum ROS_MSG_TYP {
                 ros_bool,
@@ -36,6 +38,7 @@ namespace dcu
             void close_new_ros_msg(std::ofstream *file);
             void add_ros_msg_sig(std::ofstream *file, const std::string *data_typ, const std::string *var_name);
             void init_ros_msg_folder();
+            
 
             
 

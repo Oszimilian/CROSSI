@@ -26,6 +26,7 @@
 #define HASH_DBC_PATH "Hash_DBC_Path"
 #define ROS_MSG_PATH "ROS_Msg_Path"
 #define CMAKE_FILE "CMake_File"
+#define ROS_MSG_HEADER "ROS_Msg_Header"
 
 namespace dcu
 {
@@ -52,6 +53,7 @@ namespace dcu
             std::string *config_get_hash_dbc_path();
             std::string *config_get_ros_msg_dir();
             std::string *config_get_cmake_path();
+            std::string *config_get_rosmsg_header_path();
 
         private:
 
@@ -75,6 +77,7 @@ namespace dcu
             std::string ros_msg_dir;
             std::string hash_dbc_path;
             std::string cmake_file_path;
+            std::string ros_msg_headerfile_path;
 
             bool check_dcu_config_file(int argc, char **argv);
             bool open_dcu_config_file();

@@ -225,6 +225,7 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/fileHasher.cpp
                                     src/msgBuilder.cpp
                                     src/loadROSMsg.cpp
+                                    src/headerBuilder.cpp
                                     
                                     src/dcu.h
                                     src/capture.h
@@ -235,7 +236,8 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/msggen.h
                                     src/fileHasher.h
                                     src/msgBuilder.h
-                                    src/loadROSMsg.cpp)
+                                    src/loadROSMsg.h
+                                    src/headerBuilder.h)
 
 add_definitions(-DEFAULT_CONFIG_PATH="/home/maximilian/Git/CROSSI/config/crossi_config.txt")
 

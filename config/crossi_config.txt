@@ -3,6 +3,7 @@ Force_Msg_Gen = ON
 Hash_DBC_Path = /home/maximilian-crossi/catkin_ws/src/crossi/config/dbc_change.txt
 ROS_Msg_Path = /home/maximilian-crossi/catkin_ws/src/crossi/msg/
 CMake_File = /home/maximilian-crossi/catkin_ws/src/crossi/CMakeLists.txt
+ROS_Msg_Header = /home/maximilian-crossi/catkin_ws/src/crossi/src/ros_msg_header.h
 
 Setup_Can 0 = vcan0
 Setup_Can 1 = vcan1

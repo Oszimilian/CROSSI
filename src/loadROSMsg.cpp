@@ -34,8 +34,6 @@ void dcu::Load_ROS_Msg::update_ros_msg_files_in_cmake(std::vector<std::string> *
 
 void dcu::Load_ROS_Msg::read_old_ros_msg_cmake(const std::string *start, const std::string *end)
 {
-    std::cout << *config_get_cmake_path() << std::endl;
-
     std::ifstream file(*config_get_cmake_path(), std::ios::in | std::ios::out);
     if (!file.is_open())
     {
