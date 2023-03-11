@@ -70,8 +70,9 @@ bool dcu::Header_Builder::build_ros_msg_header()
     {
         str += "#include ";
         str += "\"";
-        str += "msg/";
+        str += "crossi/";
         str += i.substr(0, i.find("."));
+        str += ".h";
         str += "\"";
         file << str << std::endl;
         str.clear();
