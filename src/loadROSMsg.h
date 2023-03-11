@@ -22,7 +22,8 @@ namespace dcu
             void read_old_ros_msg_cmake(const std::string *start, const std::string *end);
             void delete_old_ros_msg_cmake();
             void print_new_cmake_file();
-            void create_new_ros_msg_in_cmake(const std::string *start, const std::string *end);
+            void create_new_ros_msg_in_cmake();
+            bool check_cmake_file(const std::string *start, const std::string *end);
             
     };
 }
