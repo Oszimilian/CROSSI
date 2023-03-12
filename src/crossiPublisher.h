@@ -7,6 +7,8 @@
 
 namespace dcu {
 	class Crossi_Publisher;
+
+	//START_CUSTOM_AREA
 	void charger_Signals(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
 	void IMD(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
 	void charge_EN(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
@@ -82,6 +84,8 @@ namespace dcu {
 	void IVT_Msg_Result_U2(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
 	void IVT_Msg_Result_U1(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
 	void IVT_Msg_Result_I(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);
+	//END_CUSTOM_AREA
+
 	void fill_ros_msg(void *start, float *input);
 
 	class Crossi_Publisher {
@@ -99,3 +103,8 @@ namespace dcu {
 }
 
 #endif
+
+
+
+
+

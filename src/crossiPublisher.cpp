@@ -29,6 +29,8 @@ void dcu::fill_ros_msg(void *start, float *input)
 	}
 }
 
+
+//START_CUSTOM_AREA
 void dcu::Crossi_Publisher::setup_function_map()
 {
 	ros_msg_functions.insert(std::make_pair("charger_Signals", &charger_Signals));
@@ -1012,3 +1014,4 @@ void dcu::IVT_Msg_Result_I(const std::string *str, std::vector<float> *input, dc
 	pup->ros_msg_publisher[*str]->publish(msg);
 }
 
+//END_CUSTOM_AREA

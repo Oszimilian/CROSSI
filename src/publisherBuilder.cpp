@@ -19,6 +19,21 @@ void dcu::Publisher_Builder::update_publisher(std::vector<std::string> *ros_msg)
     if (ros_msg != nullptr)
     {
         this->ros_msg_vec_ptr = ros_msg;
+
+        if (!save_fixed_area_header("//START_CUSTOM_AREA", "//END_CUSTOM_AREA"))
+        {
+            std::cerr << "Error: Publisher_Builder faild saving fixed code area" << std::endl;
+            exit(-1);
+        }
+
+        
+        if (!save_fixed_area_source("//START_CUSTOM_AREA", "//END_CUSTOM_AREA"))
+        {
+            std::cerr << "Error: Publisher_Builder faild saving fixed code area" << std::endl;
+            exit(-1);
+        }
+        
+
         if (delete_publisher())
         {
             if (!build_ros_publisher_header())
@@ -39,6 +54,103 @@ void dcu::Publisher_Builder::update_publisher(std::vector<std::string> *ros_msg)
         std::cerr << "Error: Update publisher has no ros_msg_vector provided" << std::endl;
         exit(-1);
     }
+}
+
+bool dcu::Publisher_Builder::save_fixed_area_source(std::string start, std::string end)
+{
+    std::ifstream file(*config_get_publisher_source_path(), std::ios::in);
+    if (!file.is_open()) return false;
+
+    std::string line;
+
+    while(std::getline(file, line))
+    {   
+        this->fixed_area_source.push_back(line);
+        this->start_custom_area_source++;
+        if (line.find(start) != std::string::npos) break;
+    }
+
+    if (file.eof())
+    {
+        file.close();
+        return false;
+    }
+
+    while(std::getline(file, line) && line != end)
+    {
+        if (line.find(end) != std::string::npos)
+        {
+            break;
+        }
+    }
+
+    if (file.eof() && line.find(end) == std::string::npos)
+    {
+        file.close();
+        return false;
+    }
+
+    do
+    {
+        this->fixed_area_source.push_back(line);
+    } while(std::getline(file, line));
+
+    file.close();
+
+
+
+    return true; 
+}
+
+bool dcu::Publisher_Builder::save_fixed_area_header(std::string start, std::string end)
+{
+    std::ifstream file(*config_get_publisher_header_path(), std::ios::in);
+    if (!file.is_open()) return false;
+
+    std::string line;
+
+    while(std::getline(file, line))
+    {   
+        this->fixed_area_header.push_back(line);
+        this->start_custom_area_header++;
+        if (line.find(start) != std::string::npos) break;
+    }
+
+    
+
+    if (file.eof())
+    {
+        file.close();
+        return false;
+    }
+
+    while(std::getline(file, line) && line != end)
+    {
+        if (line.find(end) != std::string::npos)
+        {
+            break;
+        }
+    }
+
+    if (file.eof() && line.find(end) == std::string::npos)
+    {
+        file.close();
+        return false;
+    }
+
+    do
+    {
+        this->fixed_area_header.push_back(line);
+    } while(std::getline(file, line));
+
+    for (auto i : this->fixed_area_header)
+    {
+        std::cout << i << std::endl;
+    }
+
+    file.close();
+
+    return true; 
 }
 
 bool dcu::Publisher_Builder::delete_publisher()
@@ -71,55 +183,24 @@ bool dcu::Publisher_Builder::build_ros_publisher_header()
     std::ofstream file(*config_get_publisher_header_path(), std::ios::out | std::ios::app);
     if (!file.is_open()) return false;
 
-    file << "#ifndef CROOSI_PUBLISHER_H" << std::endl;
-    file << "#define CROOSI_PUBLISHER_H" << std::endl;
-    file << std::endl;
-
-    file << "#include <map>" << std::endl;
-    file << "#include \"ros/ros.h\"" << std::endl;
-    file << "#include \"ros_msg_header.h\"" << std::endl;
-    file << std::endl;
-
-    file << "namespace dcu {" << std::endl;
-    file << "\t" << "class Crossi_Publisher;" << std::endl;
-    std::cout << std::endl;
-
+    int i = 0;
+    for (i = 0; i < this->start_custom_area_header; i++)
+    {
+        file << this->fixed_area_header[i] << std::endl;
+    }
 
     for (auto i : *ros_msg_vec_ptr)
     {
         file << "\t";
         file << "void " << i.substr(0, i.find(".")) <<"(const std::string* str, std::vector<float> *input, Crossi_Publisher *pup);" << std::endl;
     }
-    std::cout << std::endl;
+    
+    for (int j = i; j < this->fixed_area_header.size(); j++)
+    {
+        file << this->fixed_area_header[j] << std::endl;
+    }
 
-    file << "\t" << "void fill_ros_msg(void *start, float *input);" << std::endl;
-    file << std::endl;
-
-
-    file << "\t" << "class Crossi_Publisher {" << std::endl;
-    file << "\t" << "\t" << "public:" << std::endl;
-    file << "\t" << "\t" << "\t" << "Crossi_Publisher();" << std::endl;
-    file << "\t" << "\t" << "\t" << "Crossi_Publisher *get_Crossi_Publisher_ptr();" << std::endl;
-    file << "\t" << "\t" << "\t" << "std::map<std::string, ros::Publisher*> ros_msg_publisher;" << std::endl;
-    file << "\t" << "\t" << "\t" << "std::map<std::string, void(*)(const std::string*, std::vector<float>*, Crossi_Publisher *pup)> ros_msg_functions;" << std::endl;
-
-    file << "\t" << "\t" << "\t" << "void setup_function_map();" << std::endl;
-    file << "\t" << "\t" << "\t" << "void setup_publisher_map();" << std::endl;
-    file << std::endl;
-
-    file << "\t" << "\t" << "\t" << "ros::NodeHandle node_handler;" << std::endl;
-    file << std::endl;
-
-
-
-
-
-    file << "\t" << "};" << std::endl;
-    file << "}" << std::endl;
-    file << std::endl;
-
-    file << "#endif" << std::endl;
-
+  
     file.close();
 
     return true;
@@ -130,6 +211,7 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
     std::ofstream file(*config_get_publisher_source_path(), std::ios::out | std::ios::app);
     if (!file.is_open()) return false;
 
+    /*
     file << "#include <vector>" << std::endl;
     file << "#include <string>" << std::endl;
     file << "#include <fstream>" << std::endl;
@@ -151,9 +233,17 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
     file << "\t" << "return this;" << std::endl;
     file << "}" << std::endl;
     file << std::endl;
+    */
+
+    int i = 0;
+    for(i = 0; i < this->start_custom_area_source; i++)
+    {
+        file << this->fixed_area_source[i] << std::endl;
+    }
 
 
     // Create fill_ros_msg() funktion
+    /*
     file << "void dcu::fill_ros_msg(void *start, float *input)" << std::endl;
     file << "{" << std::endl;
     file << "\t" << "static float *beginn = nullptr;" << std::endl;
@@ -166,7 +256,7 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
     file << "\t" << "}" << std::endl;
     file << "}" << std::endl;
     file << std::endl;
-
+    */
 
     // Create setup_function_map() funktion
     file << "void dcu::Crossi_Publisher::setup_function_map()" << std::endl;
@@ -213,6 +303,13 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
         file << "}" << std::endl;
         file << std::endl;
     }
+
+    for (int j = i; j < this->fixed_area_source.size(); j++)
+    {
+        file << this->fixed_area_source[j] << std::endl;
+    }
+
+    file.close();
 
     return true;
 }
