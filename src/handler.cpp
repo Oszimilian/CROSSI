@@ -33,11 +33,12 @@
 #include "ring.h"
 #include "msggen.h"
 #include "config.h"
-
+#include "ros/ros.h"
 
 
 dcu::DCU_Handler::DCU_Handler(int argc, char **argv)
 {
+    ros::init(argc, argv, "crossi");
 
     config_print_settings();
 

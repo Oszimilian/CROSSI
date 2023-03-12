@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <dbcppp/Network.h>
+#include "crossiPublisher.h"
 
 
 
@@ -11,7 +12,7 @@ namespace dcu
 {
     class DCU_Handler;
 
-    class DBC_Decode
+    class DBC_Decode : public Crossi_Publisher
     {
         private:
             std::string dbc_path;
@@ -20,6 +21,8 @@ namespace dcu
             std::unordered_map<uint64_t, const dbcppp::IMessage*> dbc_msg;
             DCU_Handler *handler;
             std::string socket_name;
+
+            std::vector<float> can_decoded_msg;
 
             //std::vector<ring<struct can_frame> *> capture_decode_ring;
 

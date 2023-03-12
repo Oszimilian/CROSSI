@@ -15,12 +15,15 @@
 #include "list.h"
 #include "ring.h"
 
+#include "crossiPublisher.h"
+
 using namespace dcu;
 
 
 dcu::DBC_Decode::DBC_Decode(std::string dbc_path, std::string socket_name, ring<struct can_frame> *caputre_decode_ring) 
                     : dbc_path(dbc_path), socket_name(socket_name), caputre_decode_ring(caputre_decode_ring)
 {
+    
     dbc_stream = new std::ifstream(this->dbc_path);
     net = dbcppp::INetwork::LoadDBCFromIs(*dbc_stream);  
     dbc_handle_error(net.get());
@@ -65,7 +68,7 @@ int dcu::DBC_Decode::dbc_decode_msg()
 
             if (itterator != dbc_msg.end())
             {
-
+                this->can_decoded_msg.clear();
 
                 const dbcppp::IMessage *msg = itterator->second;
                 std::cout << "Received Message: " << msg->Name() << std::endl;
@@ -77,8 +80,14 @@ int dcu::DBC_Decode::dbc_decode_msg()
                         (mux_sig && mux_sig->Decode(frame->data) == sig.MultiplexerSwitchValue()))
                         {
                             std::cout << sig.Name() << " = " << sig.RawToPhys(sig.Decode(frame->data)) << sig.Unit() << std::endl;
+
+                            this->can_decoded_msg.push_back(static_cast<float>(sig.RawToPhys(sig.Decode(frame->data))));
                         }
                 }
+
+                std::string msg_name = msg->Name();
+
+                ros_msg_functions[msg->Name()](&msg_name, &this->can_decoded_msg, get_Crossi_Publisher_ptr());
 
                 this->caputre_decode_ring->reuse_node(ring_node);
 

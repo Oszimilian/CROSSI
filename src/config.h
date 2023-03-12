@@ -27,6 +27,8 @@
 #define ROS_MSG_PATH "ROS_Msg_Path"
 #define CMAKE_FILE "CMake_File"
 #define ROS_MSG_HEADER "ROS_Msg_Header"
+#define CROSSI_PUBLISHER_HEADER_PATH "Crossi_Publisher_Header_Path"
+#define CROSSI_PUBLISHER_SOURCE_PATH "Crossi_Publisher_Source_Path"
 
 namespace dcu
 {
@@ -54,6 +56,8 @@ namespace dcu
             std::string *config_get_ros_msg_dir();
             std::string *config_get_cmake_path();
             std::string *config_get_rosmsg_header_path();
+            std::string *config_get_publisher_header_path();
+            std::string *config_get_publisher_source_path();
 
         private:
 
@@ -78,6 +82,8 @@ namespace dcu
             std::string hash_dbc_path;
             std::string cmake_file_path;
             std::string ros_msg_headerfile_path;
+            std::string crossi_publisher_header_path;
+            std::string crossi_publisher_source_path;
 
             bool check_dcu_config_file(int argc, char **argv);
             bool open_dcu_config_file();

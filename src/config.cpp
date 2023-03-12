@@ -107,7 +107,9 @@ bool dcu::Config::analyse_crossi_config_file()
                     *iter == HASH_DBC_PATH ||
                     *iter == ROS_MSG_PATH ||
                     *iter == CMAKE_FILE ||
-                    *iter == ROS_MSG_HEADER 
+                    *iter == ROS_MSG_HEADER ||
+                    *iter == CROSSI_PUBLISHER_HEADER_PATH ||
+                    *iter == CROSSI_PUBLISHER_SOURCE_PATH
                     )
         {
             const std::string instruction = *iter;
@@ -127,6 +129,10 @@ bool dcu::Config::analyse_crossi_config_file()
                     this->cmake_file_path = *iter;
                 else if (instruction == ROS_MSG_HEADER)
                     this->ros_msg_headerfile_path = *iter;
+                else if (instruction == CROSSI_PUBLISHER_HEADER_PATH)
+                    this->crossi_publisher_header_path = *iter;
+                else if (instruction == CROSSI_PUBLISHER_SOURCE_PATH)
+                    this->crossi_publisher_source_path = *iter;
                 else 
                 {
                     std::cout << "ERROR: Analysing the crossi_cofnig.txt Failed: " << instruction << std::endl;
@@ -310,4 +316,14 @@ std::string *dcu::Config::config_get_cmake_path()
 std::string *dcu::Config::config_get_rosmsg_header_path()
 {
     return &this->ros_msg_headerfile_path;
+}
+
+std::string *dcu::Config::config_get_publisher_header_path()
+{
+    return &this->crossi_publisher_header_path;
+}
+
+std::string *dcu::Config::config_get_publisher_source_path()
+{
+    return &this->crossi_publisher_source_path;
 }

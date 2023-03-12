@@ -9,8 +9,10 @@ project(crossi)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
-  roscpp
+roscpp
+rospy
+std_msgs
+message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -152,7 +154,7 @@ IVT_Msg_Result_I.msg
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
    DEPENDENCIES
-   #std_msgs  # Or other packages containing msgs
+  std_msgs
  )
 
 ################################################
@@ -185,10 +187,7 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES CROSSI
-#  CATKIN_DEPENDS message_generation roscpp
-#  DEPENDS system_lib
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 )
 
 ###########
@@ -226,6 +225,8 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/msgBuilder.cpp
                                     src/loadROSMsg.cpp
                                     src/headerBuilder.cpp
+                                    src/crossiPublisher.cpp
+                                    src/publisherBuilder.cpp
                                     
                                     src/dcu.h
                                     src/capture.h
@@ -237,7 +238,9 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/fileHasher.h
                                     src/msgBuilder.h
                                     src/loadROSMsg.h
-                                    src/headerBuilder.h)
+                                    src/headerBuilder.h
+                                    src/crossiPublisher.h
+                                    src/publisherBuilder.h)
 
 add_definitions(-DEFAULT_CONFIG_PATH="/home/maximilian/Git/CROSSI/config/crossi_config.txt")
 

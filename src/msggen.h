@@ -11,6 +11,7 @@
 #include "msgBuilder.h"
 #include "loadROSMsg.h"
 #include "headerBuilder.h"
+#include "publisherBuilder.h"
 
 
 #define DBC_HASH "dbc_hash:"
@@ -21,7 +22,8 @@ namespace dcu
     class DCU_Handler;
     class Config;
 
-    class Msggen : public File_Hasher, public Msg_Builder, public Load_ROS_Msg, public Header_Builder
+    class Msggen : public File_Hasher, public Msg_Builder, public Load_ROS_Msg, public Header_Builder,
+                    public Publisher_Builder
     {
         public:
             Msggen();

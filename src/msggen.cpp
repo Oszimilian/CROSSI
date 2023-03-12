@@ -28,6 +28,7 @@ void dcu::Msggen::start_message_generation()
         update_ros_msg_files_in_cmake(builder_get_ros_msg_vec());
         update_ros_msg_header(builder_get_ros_msg_vec());
         Header_Builder::print_info();
+        update_publisher(builder_get_ros_msg_vec());
     } 
 }
 
