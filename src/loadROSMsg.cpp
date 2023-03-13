@@ -21,7 +21,7 @@ void dcu::Load_ROS_Msg::update_ros_msg_files_in_cmake(std::vector<std::string> *
     this->fixed_area->init_file(*config_get_cmake_path(), "#START_CUSTOM_AREA", "#END_CUSTOM_AREA");
     this->fixed_area->reset();
 
-    if (!delete_old_ros_msg_cmake())
+    if (!this->fixed_area->erase_file(config_get_cmake_path()))
     {
         std::cerr << "Error: can not delete / clear cmake-file" << std::endl;
         exit(-1);

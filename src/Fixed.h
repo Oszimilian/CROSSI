@@ -21,6 +21,7 @@ namespace dcu
             void reset();
             bool check_vec(std::vector<std::string> *input);
             void print();
+            bool erase_file(std::string *path);
 
         private:
             std::string file_path;

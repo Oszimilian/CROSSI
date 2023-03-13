@@ -120,3 +120,14 @@ void dcu::Fixed::print()
         }
     }
 }
+
+bool dcu::Fixed::erase_file(std::string *path)
+{
+    std::ofstream file(*path, std::ios::out | std::ios::trunc);
+    if (!file.is_open()) return false;
+
+    file.clear();
+    file.close();
+
+    return true;
+}
