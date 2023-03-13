@@ -12,6 +12,14 @@ dcu::Crossi_Publisher::Crossi_Publisher()
 	setup_publisher_map();
 }
 
+dcu::Crossi_Publisher::~Crossi_Publisher()
+{
+	for (auto i : this->ros_msg_publisher)
+	{
+		delete &i;
+	}
+}
+
 dcu::Crossi_Publisher *dcu::Crossi_Publisher::get_Crossi_Publisher_ptr()
 {
 	return this;

@@ -92,6 +92,7 @@ namespace dcu {
 	class Crossi_Publisher {
 		public:
 			Crossi_Publisher();
+			~Crossi_Publisher();
 			Crossi_Publisher *get_Crossi_Publisher_ptr();
 			std::map<std::string, ros::Publisher*> ros_msg_publisher;
 			std::map<std::string, void(*)(const std::string*, std::vector<float>*, Crossi_Publisher *pup)> ros_msg_functions;

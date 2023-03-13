@@ -58,7 +58,8 @@ message_generation
 # Hier wird eingefügt
 #
 add_message_files(FILES
-#CROSSI_IMPORT_ROS_MSG_START
+
+#START_CUSTOM_AREA
 charger_Signals.msg
 IMD.msg
 charge_EN.msg
@@ -134,7 +135,7 @@ IVT_Msg_Result_Wh.msg
 IVT_Msg_Result_U2.msg
 IVT_Msg_Result_U1.msg
 IVT_Msg_Result_I.msg
-#CROSSI_IMPORT_ROS_MSG_END
+#END_CUSTOM_AREA
 )
 
 ## Generate services in the 'srv' folder

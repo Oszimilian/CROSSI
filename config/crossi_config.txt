@@ -1,17 +1,17 @@
 Can_Amount 2
 Force_Msg_Gen = ON
-Hash_DBC_Path = /home/maximilian-crossi/catkin_ws/src/crossi/config/dbc_change.txt
-ROS_Msg_Path = /home/maximilian-crossi/catkin_ws/src/crossi/msg/
-CMake_File = /home/maximilian-crossi/catkin_ws/src/crossi/CMakeLists.txt
-ROS_Msg_Header = /home/maximilian-crossi/catkin_ws/src/crossi/src/ros_msg_header.h
-Crossi_Publisher_Header_Path = /home/maximilian-crossi/catkin_ws/src/crossi/src/crossiPublisher.h
-Crossi_Publisher_Source_Path = /home/maximilian-crossi/catkin_ws/src/crossi/src/crossiPublisher.cpp
+Hash_DBC_Path = /home/maximilian/catkin_ws/src/crossi/config/dbc_change.txt
+ROS_Msg_Path = /home/maximilian/catkin_ws/src/crossi/msg/
+CMake_File = /home/maximilian/catkin_ws/src/crossi/CMakeLists.txt
+ROS_Msg_Header = /home/maximilian/catkin_ws/src/crossi/src/ros_msg_header.h
+Crossi_Publisher_Header_Path = /home/maximilian/catkin_ws/src/crossi/src/crossiPublisher.h
+Crossi_Publisher_Source_Path = /home/maximilian/catkin_ws/src/crossi/src/crossiPublisher.cpp
 
 Setup_Can 0 = vcan0
 Setup_Can 1 = vcan1
 
-Import_DBC 0 = /home/maximilian-crossi/catkin_ws/src/crossi/DBC/CAN7_UASA2209_Accu_2.dbc
-Import_DBC 1 = /home/maximilian-crossi/catkin_ws/src/crossi/DBC/CAN4_Accu_1.dbc
+Import_DBC 0 = /home/maximilian/catkin_ws/src/crossi/DBC/CAN7_UASA2209_Accu_2.dbc
+Import_DBC 1 = /home/maximilian/catkin_ws/src/crossi/DBC/CAN4_Accu_1.dbc
 
 # Single_Thread Multi_Thread
 

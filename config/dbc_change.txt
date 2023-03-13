@@ -1,2 +1,2 @@
-/home/maximilian-crossi/catkin_ws/src/crossi/DBC/CAN7_UASA2209_Accu_2.dbc = 3435484850029370832
-/home/maximilian-crossi/catkin_ws/src/crossi/DBC/CAN4_Accu_1.dbc = 6951724408895731722
+/home/maximilian/catkin_ws/src/crossi/DBC/CAN7_UASA2209_Accu_2.dbc = 3435484850029370832
+/home/maximilian/catkin_ws/src/crossi/DBC/CAN4_Accu_1.dbc = 6951724408895731722
