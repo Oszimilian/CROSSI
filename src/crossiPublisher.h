@@ -6,6 +6,7 @@
 #include "ros_msg_header.h"
 
 namespace dcu {
+
 	class Crossi_Publisher;
 
 	//START_CUSTOM_AREA
@@ -103,8 +104,4 @@ namespace dcu {
 }
 
 #endif
-
-
-
-
-
+	

@@ -5,6 +5,7 @@
 #include <vector>
 #include "config.h"
 #include "crossiPublisher.h"
+#include "Fixed.h"
 
 namespace dcu
 {
@@ -12,9 +13,13 @@ namespace dcu
     {
         public:
             Publisher_Builder();
+            ~Publisher_Builder();
             void update_publisher(std::vector<std::string> *ros_msg);
 
         private:
+            Fixed *fixed_source;
+            Fixed *fixed_header;
+
             std::vector<std::string> *ros_msg_vec_ptr;
             
             std::vector<std::string> fixed_area_source;

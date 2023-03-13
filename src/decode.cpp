@@ -95,9 +95,6 @@ int dcu::DBC_Decode::dbc_decode_msg()
             } else {
                 return false;
             }
-
-
-
         
     }
 

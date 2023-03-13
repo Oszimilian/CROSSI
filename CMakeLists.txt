@@ -227,6 +227,7 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/headerBuilder.cpp
                                     src/crossiPublisher.cpp
                                     src/publisherBuilder.cpp
+                                    src/Fixed.cpp
                                     
                                     src/dcu.h
                                     src/capture.h
@@ -240,7 +241,8 @@ add_executable(${PROJECT_NAME}_node src/dcu.cpp
                                     src/loadROSMsg.h
                                     src/headerBuilder.h
                                     src/crossiPublisher.h
-                                    src/publisherBuilder.h)
+                                    src/publisherBuilder.h
+                                    src/Fixed.h)
 
 add_definitions(-DEFAULT_CONFIG_PATH="/home/maximilian/Git/CROSSI/config/crossi_config.txt")
 
