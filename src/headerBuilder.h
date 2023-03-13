@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "config.h"
+#include "Fixed.h"
 
 namespace dcu
 {
@@ -11,6 +12,7 @@ namespace dcu
     {
         public:
             Header_Builder();
+            ~Header_Builder();
 
             void update_ros_msg_header(std::vector<std::string> *ros_msg);
             std::string get_header_name();
@@ -19,6 +21,8 @@ namespace dcu
         private:
 
             std::vector<std::string> *ros_msg_vec_ptr;
+            Fixed *fixed_space;
+
 
             bool delete_ros_msg_header();
             bool build_ros_msg_header();

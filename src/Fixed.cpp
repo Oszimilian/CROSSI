@@ -23,6 +23,18 @@ void dcu::Fixed::init_file(std::string file_path, std::string start_pattern, std
     }
 }
 
+void dcu::Fixed::init_file(std::string file_path)
+{
+    this->file_path = file_path;
+    this->start_pattern = "//START_CUSTOM_AREA";
+    this->end_pattern = "//END_CUSTOM_AREA";
+
+    if (!input_file())
+    {
+        std::cerr << "Error in input_file()" << std::endl;
+        exit(-1);
+    }
+}
 
 bool dcu::Fixed::input_file()
 {

@@ -8,11 +8,17 @@
 
 #include "headerBuilder.h"
 #include "config.h"
+#include "Fixed.h"
 
 
 dcu::Header_Builder::Header_Builder()
 {
+    
+}
 
+dcu::Header_Builder::~Header_Builder()
+{
+    delete this->fixed_space;
 }
 
 void dcu::Header_Builder::update_ros_msg_header(std::vector<std::string> *ros_msg)
@@ -20,17 +26,24 @@ void dcu::Header_Builder::update_ros_msg_header(std::vector<std::string> *ros_ms
     if (ros_msg != nullptr)
     {
         this->ros_msg_vec_ptr = ros_msg;
-        if (delete_ros_msg_header())
+
+        this->fixed_space = new Fixed;
+        fixed_space->init_file(*config_get_rosmsg_header_path());
+        fixed_space->reset();
+
+        if (!delete_ros_msg_header())
         {
-            if(!build_ros_msg_header())
-            {   
-                std::cerr << "Error: Update headers could not open to create the headers" << std::endl;
-                exit(-1);
-            }
-        } else {
             std::cerr << "Error: Update headers could not delete old headerfile with includes" << std::endl;
             exit(-1);
         }
+
+        if(!build_ros_msg_header())
+        {   
+            std::cerr << "Error: Update headers could not open to create the headers" << std::endl;
+            exit(-1);
+        }
+
+
     } else {
         std::cerr << "Error: Update headers has no ROS messages provided" << std::endl;
         exit(-1);
@@ -54,33 +67,25 @@ bool dcu::Header_Builder::delete_ros_msg_header()
 bool dcu::Header_Builder::build_ros_msg_header()
 {
     std::ofstream file(*config_get_rosmsg_header_path(), std::ios::out | std::ios::app);
-    if (!file.is_open())
+    if (!file.is_open()) return false;
+
+    for (auto i : *this->fixed_space->get_vec())
     {
-        std::cerr << "Error: Update headers can open headerfile: " << *config_get_rosmsg_header_path() << std::endl;
-        return false;
+        file << i << std::endl;
     }
-
-    file << "#ifndef CROSSI_ROS_MSG_H" << std::endl;
-    file << "#define CROSSI_ROS_MSG_H" << std::endl;
-    file << std::endl;
-
-    std::string str;
 
     for (auto i : *ros_msg_vec_ptr)
     {
-        str += "#include ";
-        str += "\"";
-        str += "crossi/";
-        str += i.substr(0, i.find("."));
-        str += ".h";
-        str += "\"";
-        file << str << std::endl;
-        str.clear();
+        file << "#include " << "\"crossi/" << i.substr(0, i.find(".")) << ".h\"" << std::endl;
     }
 
+    for (auto i : *this->fixed_space->get_vec())
+    {
+        file << i << std::endl;
+    }
     file << std::endl;
-    file << "#endif" << std::endl;
-    
+
+
     file.close();
 
     return true;

@@ -1,6 +1,7 @@
 #ifndef CROSSI_ROS_MSG_H
 #define CROSSI_ROS_MSG_H
 
+//START_CUSTOM_AREA
 #include "crossi/charger_Signals.h"
 #include "crossi/IMD.h"
 #include "crossi/charge_EN.h"
@@ -76,5 +77,9 @@
 #include "crossi/IVT_Msg_Result_U2.h"
 #include "crossi/IVT_Msg_Result_U1.h"
 #include "crossi/IVT_Msg_Result_I.h"
+//END_CUSTOM_AREA
 
 #endif
+
+
+

@@ -28,18 +28,11 @@ void dcu::Publisher_Builder::update_publisher(std::vector<std::string> *ros_msg)
         this->ros_msg_vec_ptr = ros_msg; 
 
         this->fixed_header = new Fixed;
-        fixed_header->init_file(*config_get_publisher_header_path(), "//START_CUSTOM_AREA", "//END_CUSTOM_AREA");
+        fixed_header->init_file(*config_get_publisher_header_path());
         this->fixed_header->reset();
 
-        /*
-        if (!save_fixed_area_source("//START_CUSTOM_AREA", "//END_CUSTOM_AREA"))
-        {
-            std::cerr << "Error: Publisher_Builder faild saving fixed code area" << std::endl;
-            exit(-1);
-        }
-        */
        this->fixed_source = new Fixed;
-       fixed_source->init_file(*config_get_publisher_source_path(), "//START_CUSTOM_AREA", "//END_CUSTOM_AREA");
+       fixed_source->init_file(*config_get_publisher_source_path());
        this->fixed_header->reset();
         
 
@@ -65,98 +58,7 @@ void dcu::Publisher_Builder::update_publisher(std::vector<std::string> *ros_msg)
     }
 }
 
-bool dcu::Publisher_Builder::save_fixed_area_source(std::string start, std::string end)
-{
-    std::ifstream file(*config_get_publisher_source_path(), std::ios::in);
-    if (!file.is_open()) return false;
 
-    std::string line;
-
-    while(std::getline(file, line))
-    {   
-        this->fixed_area_source.push_back(line);
-        this->start_custom_area_source++;
-        if (line.find(start) != std::string::npos) break;
-    }
-
-    if (file.eof())
-    {
-        file.close();
-        return false;
-    }
-
-    while(std::getline(file, line) && line != end)
-    {
-        if (line.find(end) != std::string::npos)
-        {
-            break;
-        }
-    }
-
-    if (file.eof() && line.find(end) == std::string::npos)
-    {
-        file.close();
-        return false;
-    }
-
-    do
-    {
-        this->fixed_area_source.push_back(line);
-    } while(std::getline(file, line));
-
-    file.close();
-
-
-
-    return true; 
-}
-
-bool dcu::Publisher_Builder::save_fixed_area_header(std::string start, std::string end)
-{
-    std::ifstream file(*config_get_publisher_header_path(), std::ios::in);
-    if (!file.is_open()) return false;
-
-    std::string line;
-
-    while(std::getline(file, line))
-    {   
-        this->fixed_area_header.push_back(line);
-        this->start_custom_area_header++;
-        if (line.find(start) != std::string::npos) break;
-    }
-
-    
-
-    if (file.eof())
-    {
-        file.close();
-        return false;
-    }
-
-    while(std::getline(file, line) && line != end)
-    {
-        if (line.find(end) != std::string::npos)
-        {
-            break;
-        }
-    }
-
-    if (file.eof() && line.find(end) == std::string::npos)
-    {
-        file.close();
-        return false;
-    }
-
-    do
-    {
-        this->fixed_area_header.push_back(line);
-    } while(std::getline(file, line));
-
-
-    file.close();
-
-    return true; 
-}
 
 bool dcu::Publisher_Builder::delete_publisher()
 {
@@ -214,14 +116,6 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
     std::ofstream file(*config_get_publisher_source_path(), std::ios::out | std::ios::app);
     if (!file.is_open()) return false;
 
-    /*
-    int i = 0;
-    for(i = 0; i < this->start_custom_area_source; i++)
-    {
-        file << this->fixed_area_source[i] << std::endl;
-    }
-    */
-
     for (auto i : *this->fixed_source->get_vec())
     {
         file << i << std::endl;
@@ -274,13 +168,6 @@ bool dcu::Publisher_Builder::build_ros_publisher_source()
         file << "}" << std::endl;
         file << std::endl;
     }
-
-    /*
-    for (int j = i; j < this->fixed_area_source.size(); j++)
-    {
-        file << this->fixed_area_source[j] << std::endl;
-    }
-    */
 
     for (auto i : *this->fixed_source->get_vec())
     {

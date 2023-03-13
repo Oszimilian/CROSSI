@@ -16,6 +16,7 @@ namespace dcu
 
 
             void init_file(std::string file, std::string start_pattern, std::string end_pattern);
+            void init_file(std::string file);
             std::vector<std::string> *get_vec();
             void reset();
             bool check_vec(std::vector<std::string> *input);
